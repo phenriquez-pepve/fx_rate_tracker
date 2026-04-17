@@ -21,8 +21,8 @@ export function KpiCard({
   compact = false,
 }: Props) {
   const isPositive = delta?.startsWith("+")
-  const deltaClass = !delta
-    ? ""
+  const valueClass = !delta
+    ? "text-slate-900"
     : isPositive
     ? deltaPositiveIsBad
       ? "text-red-600"
@@ -32,27 +32,24 @@ export function KpiCard({
     : "text-red-600"
 
   return (
-    <Card className="rounded-2xl border-slate-200 shadow-sm">
-      <CardContent className={compact ? "p-4" : "p-5"}>
+    <Card className="group relative overflow-hidden rounded-2xl border-slate-200 shadow-sm transition-all duration-200 hover:shadow-md">
+      <div className="absolute left-0 top-0 h-full w-0.5 bg-blue-600 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      <CardContent className={compact ? "p-3.5" : "p-4"}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="text-sm text-slate-500">{title}</p>
+
             <p
-              className={`mt-1 font-semibold tracking-tight text-slate-900 ${
-                compact ? "text-2xl" : "text-3xl"
-              }`}
+              className={`mt-1 font-semibold tracking-tight ${
+                compact ? "text-[1.75rem]" : "text-[2rem]"
+              } ${valueClass}`}
             >
               {value}
             </p>
 
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              {delta ? (
-                <span className={`text-xs font-medium ${deltaClass}`}>{delta}</span>
-              ) : null}
-              {subtitle ? (
-                <p className="text-xs text-slate-500">{subtitle}</p>
-              ) : null}
-            </div>
+            {subtitle ? (
+              <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+            ) : null}
           </div>
 
           {icon ? (

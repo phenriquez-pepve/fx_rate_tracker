@@ -459,44 +459,35 @@ export function SummaryDashboard({ rows }: Props) {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 gap-3">
-          <KpiCard
-            title="Brecha actual"
-            value={formatPercent(gapKpis.currentGap)}
-            delta={formatSignedPercent(gapKpis.currentGap)}
-            deltaPositiveIsBad
-            subtitle="Paralela vs. oficial"
-            icon={<GitCompareArrows className="h-5 w-5" />}
-            compact
-          />
-          <KpiCard
-            title="Brecha Δ 14 días"
-            value={formatPp(gapKpis.change14dPp)}
-            delta={formatSignedPp(gapKpis.change14dPp)}
-            deltaPositiveIsBad
-            subtitle="Cambio en puntos porcentuales"
-            icon={<TrendingUp className="h-5 w-5" />}
-            compact
-          />
-          <KpiCard
-            title="Brecha Δ 30 días"
-            value={formatPp(gapKpis.change30dPp)}
-            delta={formatSignedPp(gapKpis.change30dPp)}
-            deltaPositiveIsBad
-            subtitle="Cambio en puntos porcentuales"
-            icon={<TrendingUp className="h-5 w-5" />}
-            compact
-          />
-          <KpiCard
-            title="Brecha Δ YTD"
-            value={formatPp(gapKpis.changeYtdPp)}
-            delta={formatSignedPp(gapKpis.changeYtdPp)}
-            deltaPositiveIsBad
-            subtitle="Cambio en puntos porcentuales"
-            icon={<TrendingUp className="h-5 w-5" />}
-            compact
-          />
-        </div>
+        <div className="grid grid-cols-1 gap-3 self-start">
+  <KpiCard
+    title="Brecha actual"
+    value={formatPercent(gapKpis.currentGap)}
+    delta={formatSignedPercent(gapKpis.currentGap)}
+    deltaPositiveIsBad
+    subtitle="Paralela vs. oficial"
+    icon={<GitCompareArrows className="h-5 w-5" />}
+    compact
+  />
+  <KpiCard
+    title="Brecha Δ 14 días"
+    value={formatPp(gapKpis.change14dPp)}
+    delta={formatSignedPp(gapKpis.change14dPp)}
+    deltaPositiveIsBad
+    subtitle="Cambio en puntos porcentuales"
+    icon={<TrendingUp className="h-5 w-5" />}
+    compact
+  />
+  <KpiCard
+    title="Brecha Δ 30 días"
+    value={formatPp(gapKpis.change30dPp)}
+    delta={formatSignedPp(gapKpis.change30dPp)}
+    deltaPositiveIsBad
+    subtitle="Cambio en puntos porcentuales"
+    icon={<TrendingUp className="h-5 w-5" />}
+    compact
+  />
+</div>
       </div>
     </div>
   )
