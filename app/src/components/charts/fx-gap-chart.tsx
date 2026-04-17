@@ -157,8 +157,8 @@ export function FxGapChart({ data }: Props) {
             strokeWidth={2}
             baseValue={0}
             connectNulls={false}
-            dot={{ r: 2.5, fill: "#dc2626", strokeWidth: 0 }}
-            activeDot={{ r: 4 }}
+            dot={false}
+            activeDot={false}
           />
           <Area
             type="monotone"
@@ -168,8 +168,8 @@ export function FxGapChart({ data }: Props) {
             strokeWidth={2}
             baseValue={0}
             connectNulls={false}
-            dot={{ r: 2.5, fill: "#16a34a", strokeWidth: 0 }}
-            activeDot={{ r: 4 }}
+            dot={false}
+            activeDot={false}
           />
         </AreaChart>
       </ResponsiveContainer>

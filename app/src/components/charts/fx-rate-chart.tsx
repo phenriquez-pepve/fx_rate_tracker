@@ -54,8 +54,19 @@ export function FxRateChart({ data }: Props) {
   const [showOfficial, setShowOfficial] = useState(true)
   const [showParallel, setShowParallel] = useState(true)
 
+  const visibleData = useMemo(() => {
+    if (!showOfficial && !showParallel) return []
+
+    return data.filter((point) => {
+      const hasOfficial = showOfficial && point.OfficialRate != null
+      const hasParallel = showParallel && point.ParallelRate != null
+
+      return hasOfficial || hasParallel
+    })
+  }, [data, showOfficial, showParallel])
+
   const yDomain = useMemo(() => {
-    const values = data.flatMap((point) => {
+    const values = visibleData.flatMap((point) => {
       const result: number[] = []
 
       if (showOfficial && point.OfficialRate != null) {
@@ -80,7 +91,7 @@ export function FxRateChart({ data }: Props) {
       Math.max(0, Number((min - padding).toFixed(2))),
       Number((max + padding).toFixed(2)),
     ] as const
-  }, [data, showOfficial, showParallel])
+  }, [showOfficial, showParallel, visibleData])
 
   function TooltipRates({ active, payload, label }: TooltipContentProps) {
     const point = payload?.[0]?.payload as Props["data"][number] | undefined
@@ -151,7 +162,7 @@ export function FxRateChart({ data }: Props) {
 
       <div className="relative h-[360px] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+          <LineChart data={visibleData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
             <XAxis
               dataKey="Date"
               minTickGap={28}
@@ -176,8 +187,8 @@ export function FxRateChart({ data }: Props) {
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                dot={{ r: 2.5, fill: "#000000", strokeWidth: 0 }}
-                activeDot={{ r: 4 }}
+                dot={false}
+                activeDot={false}
                 connectNulls={false}
               />
             ) : null}
@@ -191,8 +202,8 @@ export function FxRateChart({ data }: Props) {
                 strokeDasharray="3 5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                dot={{ r: 2.5, fill: "#2563eb", strokeWidth: 0 }}
-                activeDot={{ r: 4 }}
+                dot={false}
+                activeDot={false}
                 connectNulls={false}
               />
             ) : null}
