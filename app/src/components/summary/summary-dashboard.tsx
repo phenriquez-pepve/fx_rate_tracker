@@ -1,10 +1,11 @@
 "use client"
 
 import { useMemo, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { FxAppRow } from "@/lib/data/types"
 import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { BadgeDollarSign, Activity, CalendarRange, TrendingUp, GitCompareArrows } from "lucide-react"
 import {
   ResponsiveContainer,
   LineChart,
@@ -14,13 +15,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts"
-import {
-  Activity,
-  BadgeDollarSign,
-  CalendarRange,
-  TrendingUp,
-  GitCompareArrows,
-} from "lucide-react"
 
 type Props = {
   rows: FxAppRow[]
@@ -40,7 +34,7 @@ type MonthlyPoint = {
 
 function formatCurrency(value: number | null | undefined) {
   if (value == null || Number.isNaN(value)) return "N/A"
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("es-VE", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value)
@@ -56,10 +50,20 @@ function formatPp(value: number | null | undefined) {
   return `${value.toFixed(1)}pp`
 }
 
+function formatSignedPercent(value: number | null | undefined) {
+  if (value == null || Number.isNaN(value)) return "N/A"
+  return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%`
+}
+
+function formatSignedPp(value: number | null | undefined) {
+  if (value == null || Number.isNaN(value)) return "N/A"
+  return `${value >= 0 ? "+" : ""}${value.toFixed(1)}pp`
+}
+
 function formatDate(value: string) {
   const d = new Date(value)
   if (Number.isNaN(d.getTime())) return value
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleDateString("es-VE", {
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -128,13 +132,6 @@ function daysAgo(dateStr: string, days: number) {
   return d.toISOString().slice(0, 10)
 }
 
-function monthStart(dateStr: string) {
-  const d = new Date(dateStr)
-  return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1))
-    .toISOString()
-    .slice(0, 10)
-}
-
 function buildMonthlySeries(rows: FxAppRow[]): MonthlyPoint[] {
   if (!rows.length) return []
 
@@ -175,7 +172,7 @@ function buildMonthlySeries(rows: FxAppRow[]): MonthlyPoint[] {
 
     result.push({
       Date: last.Date,
-      MonthLabel: new Date(last.Date).toLocaleDateString("en-US", {
+      MonthLabel: new Date(last.Date).toLocaleDateString("es-VE", {
         month: "short",
         year: "2-digit",
       }),
@@ -190,7 +187,7 @@ function buildMonthlySeries(rows: FxAppRow[]): MonthlyPoint[] {
   return result
 }
 
-function SummaryTooltip({
+function TooltipResumen({
   active,
   payload,
   label,
@@ -205,28 +202,46 @@ function SummaryTooltip({
   if (!point) return null
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-lg">
-      <p className="mb-2 text-sm font-medium text-slate-900">{formatDate(label ?? point.Date)}</p>
-      <div className="space-y-1 text-sm text-slate-600">
-        <p>
-          <span className="font-medium text-slate-900">Official FX:</span>{" "}
-          {formatCurrency(point.OfficialRate)}
-        </p>
-        <p>
-          <span className="font-medium text-slate-900">Official monthly dev.:</span>{" "}
-          {formatPercent(point.OfficialMonthDev)}
-        </p>
-        <p>
-          <span className="font-medium text-slate-900">Parallel FX:</span>{" "}
-          {formatCurrency(point.ParallelRate)}
-        </p>
-        <p>
-          <span className="font-medium text-slate-900">Parallel monthly dev.:</span>{" "}
-          {formatPercent(point.ParallelMonthDev)}
-        </p>
-        <p>
-          <span className="font-medium text-slate-900">Gap:</span> {formatPercent(point.GapPct)}
-        </p>
+    <div className="min-w-[260px] rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur">
+      <p className="mb-3 text-sm font-semibold text-slate-900">
+        {formatDate(label ?? point.Date)}
+      </p>
+
+      <div className="space-y-2 text-sm">
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Oficial</span>
+          <span className="font-medium text-slate-900">{formatCurrency(point.OfficialRate)}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Devaluación mensual oficial</span>
+          <span className={`font-medium ${point.OfficialMonthDev != null && point.OfficialMonthDev >= 0 ? "text-red-600" : "text-emerald-600"}`}>
+            {formatSignedPercent(point.OfficialMonthDev)}
+          </span>
+        </div>
+
+        <div className="h-px bg-slate-100" />
+
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Paralela</span>
+          <span className="font-medium text-slate-900">{formatCurrency(point.ParallelRate)}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Devaluación mensual paralela</span>
+          <span className={`font-medium ${point.ParallelMonthDev != null && point.ParallelMonthDev >= 0 ? "text-red-600" : "text-emerald-600"}`}>
+            {formatSignedPercent(point.ParallelMonthDev)}
+          </span>
+        </div>
+
+        <div className="h-px bg-slate-100" />
+
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Brecha</span>
+          <span className={`font-medium ${point.GapPct != null && point.GapPct >= 0 ? "text-red-600" : "text-emerald-600"}`}>
+            {formatSignedPercent(point.GapPct)}
+          </span>
+        </div>
       </div>
     </div>
   )
@@ -287,23 +302,22 @@ export function SummaryDashboard({ rows }: Props) {
   }, [latestRow, latestDate, mode, sortedRows])
 
   const gapKpis = useMemo(() => {
-    if (!latestDate || !latestRow?.GapPct) {
+    if (!latestDate) {
       return {
-        currentGap: latestRow?.GapPct ?? null,
+        currentGap: null,
         change14dPp: null,
         change30dPp: null,
         changeYtdPp: null,
       }
     }
 
+    const currentGap = latestRow?.GapPct ?? null
     const gap14d = latestAvailableOnOrBefore(sortedRows, "GapPct", daysAgo(latestDate, 14))
     const gap30d = latestAvailableOnOrBefore(sortedRows, "GapPct", daysAgo(latestDate, 30))
     const yearStartDate = new Date(Date.UTC(new Date(latestDate).getUTCFullYear(), 0, 1))
       .toISOString()
       .slice(0, 10)
     const gapYearStart = latestAvailableOnOrBefore(sortedRows, "GapPct", yearStartDate)
-
-    const currentGap = latestRow.GapPct ?? null
 
     return {
       currentGap,
@@ -323,88 +337,119 @@ export function SummaryDashboard({ rows }: Props) {
   }, [latestDate, latestRow, sortedRows])
 
   return (
-    <div className="space-y-6">
-      <div>
-        <div className="mb-3 flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold tracking-tight text-slate-900">Executive Summary</h2>
-            <p className="text-sm text-slate-500">
-              Latest anchored KPIs and 12-month FX evolution.
-            </p>
-          </div>
+    <div className="space-y-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Panel principal</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Resumen ejecutivo</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Monitoreo de tasa oficial, paralela y brecha con actualización automática.
+          </p>
+        </div>
 
-          <Tabs value={mode} onValueChange={(v) => setMode(v as RateMode)}>
-            <TabsList className="rounded-2xl bg-slate-100 p-1">
-              <TabsTrigger value="official" className="rounded-xl px-4">
-                Official
-              </TabsTrigger>
-              <TabsTrigger value="parallel" className="rounded-xl px-4">
-                Parallel
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <div className="rounded-2xl bg-slate-100 p-1">
+          <div className="relative flex">
+            <motion.div
+              layout
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white shadow-sm ${
+                mode === "official" ? "left-1" : "left-[calc(50%+0px)]"
+              }`}
+            />
+            <button
+              onClick={() => setMode("official")}
+              className={`relative z-10 rounded-xl px-4 py-2 text-sm font-medium transition ${
+                mode === "official" ? "text-slate-900" : "text-slate-500"
+              }`}
+            >
+              Oficial
+            </button>
+            <button
+              onClick={() => setMode("parallel")}
+              className={`relative z-10 rounded-xl px-4 py-2 text-sm font-medium transition ${
+                mode === "parallel" ? "text-slate-900" : "text-slate-500"
+              }`}
+            >
+              Paralela
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Row 1: KPI cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          title={`Today's ${mode === "official" ? "Official" : "Parallel"} FX`}
-          value={formatCurrency(selectedKpis.latestRate)}
-          subtitle="Latest available daily value"
-          icon={mode === "official" ? <BadgeDollarSign className="h-5 w-5" /> : <Activity className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="MTD Devaluation"
-          value={formatPercent(selectedKpis.mtd)}
-          subtitle="Latest vs first available date of current month"
-          icon={<CalendarRange className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="YTD Devaluation"
-          value={formatPercent(selectedKpis.ytd)}
-          subtitle="Latest vs first available date of current year"
-          icon={<TrendingUp className="h-5 w-5" />}
-        />
-        <KpiCard
-          title="Interannual Devaluation"
-          value={formatPercent(selectedKpis.interannual)}
-          subtitle="Latest vs same period last year"
-          icon={<TrendingUp className="h-5 w-5" />}
-        />
-      </div>
+      {/* Fila 1 */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={mode}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.18 }}
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
+        >
+          <KpiCard
+            title={`Tasa ${mode === "official" ? "oficial" : "paralela"} de hoy`}
+            value={formatCurrency(selectedKpis.latestRate)}
+            subtitle="Último valor disponible"
+            icon={mode === "official" ? <BadgeDollarSign className="h-5 w-5" /> : <Activity className="h-5 w-5" />}
+          />
+          <KpiCard
+            title="Devaluación MTD"
+            value={formatPercent(selectedKpis.mtd)}
+            delta={formatSignedPercent(selectedKpis.mtd)}
+            deltaPositiveIsBad
+            subtitle="Mes actual"
+            icon={<CalendarRange className="h-5 w-5" />}
+          />
+          <KpiCard
+            title="Devaluación YTD"
+            value={formatPercent(selectedKpis.ytd)}
+            delta={formatSignedPercent(selectedKpis.ytd)}
+            deltaPositiveIsBad
+            subtitle="Año actual"
+            icon={<TrendingUp className="h-5 w-5" />}
+          />
+          <KpiCard
+            title="Devaluación interanual"
+            value={formatPercent(selectedKpis.interannual)}
+            delta={formatSignedPercent(selectedKpis.interannual)}
+            deltaPositiveIsBad
+            subtitle="Vs. mismo período año anterior"
+            icon={<TrendingUp className="h-5 w-5" />}
+          />
+        </motion.div>
+      </AnimatePresence>
 
-      {/* Row 2: chart + gap KPI stack */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-4">
+      {/* Fila 2 */}
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-4">
         <Card className="xl:col-span-3 rounded-2xl border-slate-200 shadow-sm">
-          <CardHeader>
-            <CardTitle>Last 12 Months FX Evolution</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Evolución últimos 12 meses</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="h-[420px] w-full">
+          <CardContent className="pt-1">
+            <div className="h-[390px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlySeries} margin={{ top: 16, right: 16, left: 4, bottom: 8 }}>
+                <LineChart data={monthlySeries} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
                   <XAxis dataKey="MonthLabel" tickLine={false} axisLine={false} />
                   <YAxis tickLine={false} axisLine={false} />
-                  <Tooltip content={<SummaryTooltip />} />
+                  <Tooltip content={<TooltipResumen />} />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="OfficialRate"
-                    name="Official FX"
+                    name="Tasa oficial"
                     stroke="#2563eb"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: "#2563eb" }}
+                    dot={{ r: 4, fill: "#2563eb", strokeWidth: 0 }}
                     activeDot={{ r: 6 }}
                   />
                   <Line
                     type="monotone"
                     dataKey="ParallelRate"
-                    name="Parallel FX"
+                    name="Tasa paralela"
                     stroke="#f97316"
                     strokeWidth={3}
                     strokeDasharray="7 7"
-                    dot={{ r: 4, fill: "#f97316" }}
+                    dot={{ r: 4, fill: "#f97316", strokeWidth: 0 }}
                     activeDot={{ r: 6 }}
                     connectNulls={false}
                   />
@@ -414,30 +459,42 @@ export function SummaryDashboard({ rows }: Props) {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-3">
           <KpiCard
-            title="Current Gap"
+            title="Brecha actual"
             value={formatPercent(gapKpis.currentGap)}
-            subtitle="Parallel vs Official"
+            delta={formatSignedPercent(gapKpis.currentGap)}
+            deltaPositiveIsBad
+            subtitle="Paralela vs. oficial"
             icon={<GitCompareArrows className="h-5 w-5" />}
+            compact
           />
           <KpiCard
-            title="Gap Δ 14D"
+            title="Brecha Δ 14 días"
             value={formatPp(gapKpis.change14dPp)}
-            subtitle="Change in percentage points"
+            delta={formatSignedPp(gapKpis.change14dPp)}
+            deltaPositiveIsBad
+            subtitle="Cambio en puntos porcentuales"
             icon={<TrendingUp className="h-5 w-5" />}
+            compact
           />
           <KpiCard
-            title="Gap Δ 30D"
+            title="Brecha Δ 30 días"
             value={formatPp(gapKpis.change30dPp)}
-            subtitle="Change in percentage points"
+            delta={formatSignedPp(gapKpis.change30dPp)}
+            deltaPositiveIsBad
+            subtitle="Cambio en puntos porcentuales"
             icon={<TrendingUp className="h-5 w-5" />}
+            compact
           />
           <KpiCard
-            title="Gap Δ YTD"
+            title="Brecha Δ YTD"
             value={formatPp(gapKpis.changeYtdPp)}
-            subtitle="Change in percentage points"
+            delta={formatSignedPp(gapKpis.changeYtdPp)}
+            deltaPositiveIsBad
+            subtitle="Cambio en puntos porcentuales"
             icon={<TrendingUp className="h-5 w-5" />}
+            compact
           />
         </div>
       </div>
