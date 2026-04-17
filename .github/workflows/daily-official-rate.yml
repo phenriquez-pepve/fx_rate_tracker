@@ -3,7 +3,7 @@ name: Daily Official FX
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 13 * * *"
+    - cron: "30 8 * * *"
 
 permissions:
   contents: write
