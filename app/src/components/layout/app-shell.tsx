@@ -1,12 +1,11 @@
 import Link from "next/link"
-import { ReactNode } from "react"
+import { type CSSProperties, type ReactNode } from "react"
 import {
   LayoutDashboard,
   LineChart,
   Table2,
   Info,
   TrendingUp,
-  PanelLeft,
 } from "lucide-react"
 import {
   SidebarProvider,
@@ -43,7 +42,7 @@ export function AppShell({ children }: Props) {
         {
           "--sidebar-width": "16rem",
           "--sidebar-width-mobile": "18rem",
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <Sidebar variant="inset" collapsible="offcanvas">

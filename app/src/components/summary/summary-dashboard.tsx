@@ -14,6 +14,7 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  type TooltipContentProps,
 } from "recharts"
 
 type Props = {
@@ -27,6 +28,10 @@ type MonthlyPoint = {
   MonthLabel: string
   OfficialRate: number | null
   ParallelRate: number | null
+  OfficialStartDate: string | null
+  OfficialEndDate: string | null
+  ParallelStartDate: string | null
+  ParallelEndDate: string | null
   OfficialMonthDev: number | null
   ParallelMonthDev: number | null
   GapPct: number | null
@@ -154,20 +159,22 @@ function buildMonthlySeries(rows: FxAppRow[]): MonthlyPoint[] {
 
   const result: MonthlyPoint[] = []
 
-  for (const [key, monthRows] of [...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
+  for (const [, monthRows] of [...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
     const ordered = [...monthRows].sort((a, b) => a.Date.localeCompare(b.Date))
     const last = ordered.at(-1)!
     const firstOfficial = ordered.find((r) => r.OfficialRate != null) ?? null
+    const lastOfficial = [...ordered].reverse().find((r) => r.OfficialRate != null) ?? null
     const firstParallel = ordered.find((r) => r.ParallelRate != null) ?? null
+    const lastParallel = [...ordered].reverse().find((r) => r.ParallelRate != null) ?? null
 
     const officialMonthDev =
-      last.OfficialRate != null && firstOfficial?.OfficialRate != null
-        ? (last.OfficialRate - firstOfficial.OfficialRate) / firstOfficial.OfficialRate
+      lastOfficial?.OfficialRate != null && firstOfficial?.OfficialRate != null
+        ? (lastOfficial.OfficialRate - firstOfficial.OfficialRate) / firstOfficial.OfficialRate
         : null
 
     const parallelMonthDev =
-      last.ParallelRate != null && firstParallel?.ParallelRate != null
-        ? (last.ParallelRate - firstParallel.ParallelRate) / firstParallel.ParallelRate
+      lastParallel?.ParallelRate != null && firstParallel?.ParallelRate != null
+        ? (lastParallel.ParallelRate - firstParallel.ParallelRate) / firstParallel.ParallelRate
         : null
 
     result.push({
@@ -176,8 +183,12 @@ function buildMonthlySeries(rows: FxAppRow[]): MonthlyPoint[] {
         month: "short",
         year: "2-digit",
       }),
-      OfficialRate: last.OfficialRate,
-      ParallelRate: last.ParallelRate,
+      OfficialRate: lastOfficial?.OfficialRate ?? null,
+      ParallelRate: lastParallel?.ParallelRate ?? null,
+      OfficialStartDate: firstOfficial?.Date ?? null,
+      OfficialEndDate: lastOfficial?.Date ?? null,
+      ParallelStartDate: firstParallel?.Date ?? null,
+      ParallelEndDate: lastParallel?.Date ?? null,
       OfficialMonthDev: officialMonthDev,
       ParallelMonthDev: parallelMonthDev,
       GapPct: last.GapPct,
@@ -191,11 +202,7 @@ function TooltipResumen({
   active,
   payload,
   label,
-}: {
-  active?: boolean
-  payload?: any[]
-  label?: string
-}) {
+}: TooltipContentProps) {
   if (!active || !payload?.length) return null
 
   const point = payload[0]?.payload as MonthlyPoint | undefined
@@ -204,13 +211,22 @@ function TooltipResumen({
   return (
     <div className="min-w-[260px] rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur">
       <p className="mb-3 text-sm font-semibold text-slate-900">
-        {formatDate(label ?? point.Date)}
+        {label ?? point.MonthLabel}
       </p>
 
       <div className="space-y-2 text-sm">
         <div className="flex items-center justify-between gap-4">
           <span className="text-slate-500">Oficial</span>
           <span className="font-medium text-slate-900">{formatCurrency(point.OfficialRate)}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Comparación oficial</span>
+          <span className="text-right font-medium text-slate-900">
+            {point.OfficialStartDate && point.OfficialEndDate
+              ? `${formatDate(point.OfficialStartDate)} vs ${formatDate(point.OfficialEndDate)}`
+              : "N/A"}
+          </span>
         </div>
 
         <div className="flex items-center justify-between gap-4">
@@ -225,6 +241,15 @@ function TooltipResumen({
         <div className="flex items-center justify-between gap-4">
           <span className="text-slate-500">Paralela</span>
           <span className="font-medium text-slate-900">{formatCurrency(point.ParallelRate)}</span>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-slate-500">Comparación paralela</span>
+          <span className="text-right font-medium text-slate-900">
+            {point.ParallelStartDate && point.ParallelEndDate
+              ? `${formatDate(point.ParallelStartDate)} vs ${formatDate(point.ParallelEndDate)}`
+              : "N/A"}
+          </span>
         </div>
 
         <div className="flex items-center justify-between gap-4">
@@ -431,26 +456,30 @@ export function SummaryDashboard({ rows }: Props) {
                 <LineChart data={monthlySeries} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
                   <XAxis dataKey="MonthLabel" tickLine={false} axisLine={false} />
                   <YAxis tickLine={false} axisLine={false} />
-                  <Tooltip content={<TooltipResumen />} />
+                  <Tooltip content={TooltipResumen} />
                   <Legend />
                   <Line
                     type="monotone"
                     dataKey="OfficialRate"
                     name="Tasa oficial"
-                    stroke="#2563eb"
-                    strokeWidth={3}
-                    dot={{ r: 4, fill: "#2563eb", strokeWidth: 0 }}
-                    activeDot={{ r: 6 }}
+                    stroke="#000000"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    dot={{ r: 2.5, fill: "#000000", strokeWidth: 0 }}
+                    activeDot={{ r: 4 }}
                   />
                   <Line
                     type="monotone"
                     dataKey="ParallelRate"
                     name="Tasa paralela"
-                    stroke="#f97316"
-                    strokeWidth={3}
-                    strokeDasharray="7 7"
-                    dot={{ r: 4, fill: "#f97316", strokeWidth: 0 }}
-                    activeDot={{ r: 6 }}
+                    stroke="#2563eb"
+                    strokeWidth={2}
+                    strokeDasharray="3 5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    dot={{ r: 2.5, fill: "#2563eb", strokeWidth: 0 }}
+                    activeDot={{ r: 4 }}
                     connectNulls={false}
                   />
                 </LineChart>

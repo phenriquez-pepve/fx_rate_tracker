@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { ReactNode } from "react"
+import { type ReactNode } from "react"
 
 type Props = {
   title: string
@@ -34,33 +34,33 @@ export function KpiCard({
   return (
     <Card className="group relative overflow-hidden rounded-2xl border-slate-200 shadow-sm transition-all duration-200 hover:shadow-md">
       <div className="absolute left-0 top-0 h-full w-0.5 bg-blue-600 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      <CardContent className={compact ? "p-3.5" : "p-4"}>
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
+      <CardContent className={compact ? "px-3.5 py-3" : "px-4 py-3.5"}>
+        <div className="flex items-start gap-3">
+          {icon ? (
+            <div
+              className={`shrink-0 rounded-2xl bg-slate-100 text-slate-700 ${
+                compact ? "p-2" : "p-2.5"
+              }`}
+            >
+              {icon}
+            </div>
+          ) : null}
+
+          <div className="min-w-0 flex-1">
             <p className="text-sm text-slate-500">{title}</p>
 
             <p
-              className={`mt-1 font-semibold tracking-tight ${
-                compact ? "text-[1.75rem]" : "text-[2rem]"
+              className={`mt-0.5 font-semibold leading-none tracking-tight ${
+                compact ? "text-[1.65rem]" : "text-[1.9rem]"
               } ${valueClass}`}
             >
               {value}
             </p>
 
             {subtitle ? (
-              <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+              <p className="mt-0.5 text-xs text-slate-500">{subtitle}</p>
             ) : null}
           </div>
-
-          {icon ? (
-            <div
-              className={`shrink-0 rounded-2xl bg-slate-100 text-slate-700 ${
-                compact ? "p-2.5" : "p-3"
-              }`}
-            >
-              {icon}
-            </div>
-          ) : null}
         </div>
       </CardContent>
     </Card>

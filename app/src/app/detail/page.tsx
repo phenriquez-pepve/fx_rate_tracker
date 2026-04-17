@@ -16,7 +16,7 @@ export default async function DetailPage() {
             Detalle diario
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            Dataset diario consolidado con indicadores de carry-forward y cálculo de brecha.
+            Dataset diario consolidado con filtros por fecha, exportación CSV y cálculo de brecha.
           </p>
         </div>
 
