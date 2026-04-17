@@ -1,49 +1,64 @@
 Date,RateType,ExchangeRate,Source,LoadTimestampUTC
-2026-02-14,Parallel FX,531.14,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-15,Parallel FX,535.43,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-16,Parallel FX,535.21,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-17,Parallel FX,532.94,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-18,Parallel FX,559.75,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-19,Parallel FX,579.39,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-20,Parallel FX,574.09,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-21,Parallel FX,572.77,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-22,Parallel FX,563.62,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-23,Parallel FX,584.49,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-24,Parallel FX,608.28,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-25,Parallel FX,606.14,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-26,Parallel FX,610.92,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-02-27,Parallel FX,603.32,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-15,Parallel FX,630.72,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-16,Parallel FX,648.69,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-17,Parallel FX,662.81,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-18,Parallel FX,665.16,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-19,Parallel FX,662.37,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-20,Parallel FX,656.02,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-21,Parallel FX,655.42,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-22,Parallel FX,656.24,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-23,Parallel FX,659.65,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-24,Parallel FX,662.99,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-25,Parallel FX,678.37,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-26,Parallel FX,666.03,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-27,Parallel FX,661.84,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-28,Parallel FX,666.78,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-29,Parallel FX,666.5,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-30,Parallel FX,656.39,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-03-31,Parallel FX,656.57,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-01,Parallel FX,652.97,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-02,Parallel FX,651.98,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-03,Parallel FX,643.94,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-04,Parallel FX,633.35,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-05,Parallel FX,629.5,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-06,Parallel FX,634.95,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-07,Parallel FX,634.52,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-08,Parallel FX,635.85,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-09,Parallel FX,634.87,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-10,Parallel FX,637.5,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-11,Parallel FX,633.4,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-12,Parallel FX,630.23,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-13,Parallel FX,636.5,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-14,Parallel FX,639.94,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-15,Parallel FX,626.7,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-16,Parallel FX,622.67,DolarAPI Paralelo Histórico,2026-04-17T12:28:36.211932+00:00
-2026-04-17,Parallel FX,622.16,DolarAPI Paralelo,2026-04-17T12:32:10.256656+00:00
+2026-02-14,Parallel FX,531.14,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-15,Parallel FX,535.43,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-16,Parallel FX,535.21,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-17,Parallel FX,532.94,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-18,Parallel FX,559.75,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-19,Parallel FX,579.39,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-20,Parallel FX,574.09,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-21,Parallel FX,572.77,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-22,Parallel FX,563.62,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-23,Parallel FX,584.49,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-24,Parallel FX,608.28,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-25,Parallel FX,606.14,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-26,Parallel FX,610.92,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-27,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-02-28,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-01,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-02,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-03,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-04,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-05,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-06,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-07,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-08,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-09,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-10,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-11,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-12,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-13,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-14,Parallel FX,603.32,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-15,Parallel FX,630.72,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-16,Parallel FX,648.69,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-17,Parallel FX,662.81,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-18,Parallel FX,665.16,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-19,Parallel FX,662.37,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-20,Parallel FX,656.02,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-21,Parallel FX,655.42,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-22,Parallel FX,656.24,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-23,Parallel FX,659.65,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-24,Parallel FX,662.99,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-25,Parallel FX,678.37,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-26,Parallel FX,666.03,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-27,Parallel FX,661.84,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-28,Parallel FX,666.78,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-29,Parallel FX,666.5,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-30,Parallel FX,656.39,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-03-31,Parallel FX,656.57,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-01,Parallel FX,652.97,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-02,Parallel FX,651.98,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-03,Parallel FX,643.94,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-04,Parallel FX,633.35,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-05,Parallel FX,629.5,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-06,Parallel FX,634.95,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-07,Parallel FX,634.52,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-08,Parallel FX,635.85,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-09,Parallel FX,634.87,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-10,Parallel FX,637.5,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-11,Parallel FX,633.4,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-12,Parallel FX,630.23,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-13,Parallel FX,636.5,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-14,Parallel FX,639.94,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-15,Parallel FX,626.7,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-16,Parallel FX,622.67,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
+2026-04-17,Parallel FX,622.16,DolarAPI Paralelo Histórico (calendar-filled),2026-04-17T12:48:23.703923+00:00
