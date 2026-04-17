@@ -99,6 +99,7 @@ export function TrendsDashboard({ rows }: Props) {
   const latestRow = useMemo(() => getLatestRow(filteredRows), [filteredRows])
   const rateSeries = useMemo(() => buildRateSeries(filteredRows), [filteredRows])
   const gapSeries = useMemo(() => buildGapSeries(filteredRows), [filteredRows])
+  const showMarkers = preset === "lastWeek" || preset === "lastMonth"
 
   function handlePresetChange(nextPreset: PresetRange) {
     setPreset(nextPreset)
@@ -195,7 +196,7 @@ export function TrendsDashboard({ rows }: Props) {
             <CardTitle className="text-base">Tasa oficial vs. paralela</CardTitle>
           </CardHeader>
           <CardContent className="pt-1">
-            <FxRateChart data={rateSeries} />
+            <FxRateChart data={rateSeries} showMarkers={showMarkers} />
           </CardContent>
         </Card>
 
@@ -237,7 +238,7 @@ export function TrendsDashboard({ rows }: Props) {
           <CardTitle className="text-base">Tendencia de brecha (%)</CardTitle>
         </CardHeader>
         <CardContent className="pt-1">
-          <FxGapChart data={gapSeries} />
+          <FxGapChart data={gapSeries} showMarkers={showMarkers} />
         </CardContent>
       </Card>
     </div>

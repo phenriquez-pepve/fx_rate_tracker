@@ -19,6 +19,7 @@ type Props = {
     OfficialRate: number | null
     ParallelRate: number | null
   }[]
+  showMarkers?: boolean
 }
 
 function formatCurrency(value: number | null | undefined) {
@@ -50,7 +51,7 @@ function formatTooltipDate(value: string) {
   })
 }
 
-export function FxRateChart({ data }: Props) {
+export function FxRateChart({ data, showMarkers = false }: Props) {
   const [showOfficial, setShowOfficial] = useState(true)
   const [showParallel, setShowParallel] = useState(true)
 
@@ -187,8 +188,8 @@ export function FxRateChart({ data }: Props) {
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                dot={false}
-                activeDot={false}
+                dot={showMarkers ? { r: 2.5, fill: "#000000", strokeWidth: 0 } : false}
+                activeDot={showMarkers ? { r: 4 } : false}
                 connectNulls={false}
               />
             ) : null}
@@ -202,8 +203,8 @@ export function FxRateChart({ data }: Props) {
                 strokeDasharray="3 5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                dot={false}
-                activeDot={false}
+                dot={showMarkers ? { r: 2.5, fill: "#2563eb", strokeWidth: 0 } : false}
+                activeDot={showMarkers ? { r: 4 } : false}
                 connectNulls={false}
               />
             ) : null}

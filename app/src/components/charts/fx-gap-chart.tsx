@@ -19,6 +19,7 @@ type Props = {
     GapPct: number | null
     GapAbs: number | null
   }[]
+  showMarkers?: boolean
 }
 
 function formatCurrency(value: number | null | undefined) {
@@ -60,7 +61,7 @@ function getDeltaColorClass(value: number | null | undefined) {
   return value > 0 ? "text-red-600" : "text-emerald-600"
 }
 
-export function FxGapChart({ data }: Props) {
+export function FxGapChart({ data, showMarkers = false }: Props) {
   const chartData = useMemo(
     () =>
       data.map((point) => ({
@@ -157,8 +158,8 @@ export function FxGapChart({ data }: Props) {
             strokeWidth={2}
             baseValue={0}
             connectNulls={false}
-            dot={false}
-            activeDot={false}
+            dot={showMarkers ? { r: 2.5, fill: "#dc2626", strokeWidth: 0 } : false}
+            activeDot={showMarkers ? { r: 4 } : false}
           />
           <Area
             type="monotone"
@@ -168,8 +169,8 @@ export function FxGapChart({ data }: Props) {
             strokeWidth={2}
             baseValue={0}
             connectNulls={false}
-            dot={false}
-            activeDot={false}
+            dot={showMarkers ? { r: 2.5, fill: "#16a34a", strokeWidth: 0 } : false}
+            activeDot={showMarkers ? { r: 4 } : false}
           />
         </AreaChart>
       </ResponsiveContainer>
