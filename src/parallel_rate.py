@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timezone
+import pandas as pd
 import requests
 
 from common import load_history, now_utc_iso, save_history, upsert_daily_row
@@ -18,22 +19,38 @@ def fetch_current_parallel_rate(timeout_seconds: int = 30) -> tuple[str, float]:
 
     rate = float(data["promedio"])
     dt = datetime.fromisoformat(data["fechaActualizacion"].replace("Z", "+00:00"))
-    date_value = dt.date().isoformat()
+    source_date = dt.date().isoformat()
 
-    return date_value, rate
+    return source_date, rate
 
 
 def main() -> None:
-    date_value, rate = fetch_current_parallel_rate()
-    print(f"Parallel FX parsed: {date_value} -> {rate}")
+    today_utc = datetime.now(timezone.utc).date().isoformat()
+    source_date, rate = fetch_current_parallel_rate()
 
     df = load_history(CSV_PATH)
+
+    if source_date != today_utc:
+        if df.empty:
+            raise ValueError(
+                f"Parallel API returned source date {source_date}, not today {today_utc}, "
+                "and there is no prior stored value to carry forward."
+            )
+        last_rate = float(pd.to_numeric(df["ExchangeRate"], errors="coerce").dropna().iloc[-1])
+        effective_rate = last_rate
+        source_label = "DolarAPI Paralelo (carried forward)"
+    else:
+        effective_rate = rate
+        source_label = "DolarAPI Paralelo"
+
+    print(f"Parallel FX effective load: {today_utc} -> {effective_rate}")
+
     df = upsert_daily_row(
         df=df,
-        date_value=date_value,
+        date_value=today_utc,
         rate_type="Parallel FX",
-        exchange_rate=rate,
-        source="DolarAPI Paralelo",
+        exchange_rate=effective_rate,
+        source=source_label,
         load_timestamp_utc=now_utc_iso(),
     )
     save_history(df, CSV_PATH)
