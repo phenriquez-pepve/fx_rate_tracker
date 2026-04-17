@@ -55,11 +55,10 @@ type ReturnPoint = {
 }
 
 const FORECAST_WINDOWS = [
-  { label: "Última semana", days: 7, weight: 0.3 },
+  { label: "Última semana", days: 7, weight: 0.35 },
   { label: "Últimos 14 días", days: 14, weight: 0.25 },
-  { label: "Últimos 30 días", days: 30, weight: 0.2 },
-  { label: "Últimos 52 días", days: 52, weight: 0.15 },
-  { label: "Últimos 90 días", days: 90, weight: 0.1 },
+  { label: "Últimos 30 días", days: 30, weight: 0.25 },
+  { label: "Últimos 90 días", days: 90, weight: 0.15 },
 ] as const
 
 const SCENARIO_STD_MULTIPLIER = 0.75
@@ -73,6 +72,14 @@ function shiftUtcDate(value: string, amount: number) {
   const date = new Date(`${value}T00:00:00Z`)
   date.setUTCDate(date.getUTCDate() + amount)
   return toIsoDate(date)
+}
+
+function diffUtcDays(startDate: string, endDate: string) {
+  const start = new Date(`${startDate}T00:00:00Z`)
+  const end = new Date(`${endDate}T00:00:00Z`)
+  const diffMs = end.getTime() - start.getTime()
+
+  return Math.max(1, Math.round(diffMs / 86_400_000))
 }
 
 function mean(values: number[]) {
@@ -107,19 +114,24 @@ function weightedAverage(values: Array<{ value: number | null; weight: number }>
 
 function buildDailyReturnSeries(
   rows: FxAppRow[],
-  key: "OfficialRate" | "ParallelRate"
+  key: "OfficialRate" | "ParallelRate",
+  carryForwardKey: "OfficialCarriedForward" | "ParallelCarriedForward"
 ): ReturnPoint[] {
   const result: ReturnPoint[] = []
+  const observedRows = rows.filter(
+    (row) => row[key] != null && row[carryForwardKey] !== true
+  )
 
-  for (let index = 1; index < rows.length; index += 1) {
-    const current = rows[index][key]
-    const previous = rows[index - 1][key]
+  for (let index = 1; index < observedRows.length; index += 1) {
+    const current = observedRows[index][key]
+    const previous = observedRows[index - 1][key]
 
     if (current == null || previous == null || previous === 0) continue
+    const elapsedDays = diffUtcDays(observedRows[index - 1].Date, observedRows[index].Date)
 
     result.push({
-      Date: rows[index].Date,
-      value: (current - previous) / previous,
+      Date: observedRows[index].Date,
+      value: Math.pow(current / previous, 1 / elapsedDays) - 1,
     })
   }
 
@@ -128,16 +140,22 @@ function buildDailyReturnSeries(
 
 function buildGapChangeSeries(rows: FxAppRow[]): ReturnPoint[] {
   const result: ReturnPoint[] = []
+  const observedRows = rows.filter(
+    (row) =>
+      row.GapPct != null &&
+      !(row.OfficialCarriedForward === true && row.ParallelCarriedForward === true)
+  )
 
-  for (let index = 1; index < rows.length; index += 1) {
-    const current = rows[index].GapPct
-    const previous = rows[index - 1].GapPct
+  for (let index = 1; index < observedRows.length; index += 1) {
+    const current = observedRows[index].GapPct
+    const previous = observedRows[index - 1].GapPct
 
     if (current == null || previous == null) continue
+    const elapsedDays = diffUtcDays(observedRows[index - 1].Date, observedRows[index].Date)
 
     result.push({
-      Date: rows[index].Date,
-      value: (current - previous) * 100,
+      Date: observedRows[index].Date,
+      value: ((current - previous) * 100) / elapsedDays,
     })
   }
 
@@ -227,8 +245,16 @@ export function buildForecastModel(rows: FxAppRow[], horizonDays = 30): Forecast
     }
   }
 
-  const officialReturnSeries = buildDailyReturnSeries(sortedRows, "OfficialRate")
-  const parallelReturnSeries = buildDailyReturnSeries(sortedRows, "ParallelRate")
+  const officialReturnSeries = buildDailyReturnSeries(
+    sortedRows,
+    "OfficialRate",
+    "OfficialCarriedForward"
+  )
+  const parallelReturnSeries = buildDailyReturnSeries(
+    sortedRows,
+    "ParallelRate",
+    "ParallelCarriedForward"
+  )
   const gapChangeSeries = buildGapChangeSeries(sortedRows)
 
   const windows = FORECAST_WINDOWS.map((window) => {

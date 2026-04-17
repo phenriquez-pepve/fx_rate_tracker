@@ -626,7 +626,7 @@ export function ForecastDashboard({ rows }: Props) {
           <div className="rounded-2xl bg-slate-50 p-4">
             <p className="font-medium text-slate-900">Variables utilizadas</p>
             <p className="mt-2">
-              Se toma como ancla el último valor disponible de tasa oficial y paralela, y se calculan devaluaciones diarias históricas sobre ventanas de 7, 14, 30, 52 y 90 días.
+              Se toma como ancla el último valor disponible de tasa oficial y paralela, y se calculan devaluaciones diarias históricas sobre ventanas de 7, 14, 30 y 90 días.
             </p>
           </div>
           <div className="rounded-2xl bg-slate-50 p-4">
@@ -639,6 +639,12 @@ export function ForecastDashboard({ rows }: Props) {
             <p className="font-medium text-slate-900">Optimista y pesimista</p>
             <p className="mt-2">
               Ajustan la base regular en {SCENARIO_STD_TEXT} desviaciones estándar. La brecha se proyecta directamente a partir de las tasas estimadas, no como un supuesto independiente.
+            </p>
+          </div>
+          <div className="rounded-2xl bg-slate-50 p-4 lg:col-span-3">
+            <p className="font-medium text-slate-900">Ajuste de calidad para el forecast</p>
+            <p className="mt-2">
+              Los retornos diarios excluyen días con carry-forward y se normalizan por días transcurridos entre observaciones publicadas, evitando que fines de semana o feriados diluyan artificialmente la señal de devaluación.
             </p>
           </div>
         </CardContent>

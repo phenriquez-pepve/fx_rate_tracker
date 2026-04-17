@@ -6,6 +6,7 @@ import {
   Table2,
   Info,
   TrendingUp,
+  ShieldCheck,
 } from "lucide-react"
 import {
   SidebarProvider,
@@ -22,6 +23,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
+import { getLatestAvailableRow } from "@/lib/analytics/data-quality"
+import { fetchFxData } from "@/lib/data/fetch-fx-data"
 
 const navItems = [
   { href: "/", label: "Resumen", icon: LayoutDashboard },
@@ -29,13 +32,52 @@ const navItems = [
   { href: "/detail", label: "Detalle", icon: Table2 },
   { href: "/forecast", label: "Forecast", icon: TrendingUp },
   { href: "/methodology", label: "Metodología", icon: Info },
+  { href: "/data-quality", label: "Calidad de datos", icon: ShieldCheck },
 ]
 
 type Props = {
   children: ReactNode
 }
 
-export function AppShell({ children }: Props) {
+function formatRefreshDate(value: string | null) {
+  if (!value) return "N/A"
+
+  const date = new Date(`${value}T00:00:00Z`)
+  if (Number.isNaN(date.getTime())) return value
+
+  return date.toLocaleDateString("es-VE", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    timeZone: "UTC",
+  })
+}
+
+function formatRefreshDateTime(value: string | null) {
+  if (!value) return "N/A"
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return value
+
+  return `${date.toLocaleDateString("es-VE", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    timeZone: "UTC",
+  })} · ${date.toLocaleTimeString("es-VE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "UTC",
+  })} UTC`
+}
+
+export async function AppShell({ children }: Props) {
+  const rows = await fetchFxData()
+  const latestOfficialRow = getLatestAvailableRow(rows, "OfficialRate", {
+    publishedOnly: true,
+  })
+
   return (
     <SidebarProvider
       style={
@@ -63,10 +105,22 @@ export function AppShell({ children }: Props) {
 
           <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
             <p className="text-xs font-medium text-slate-700">
-              Espacio para logo corporativo
+              Desarrollo por Paul Henriquez
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              Luego puedes reemplazar “PH” por tu logo real.
+              RGM Venezuela
+            </p>
+          </div>
+
+          <div className="mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-3">
+            <p className="text-xs font-medium text-slate-700">
+              Último refresh oficial
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              {formatRefreshDateTime(latestOfficialRow?.DataFreshnessUTC ?? null)}
+            </p>
+            <p className="mt-2 text-xs text-slate-500">
+              Fecha de tasa: {formatRefreshDate(latestOfficialRow?.Date ?? null)}
             </p>
           </div>
         </SidebarHeader>
