@@ -22,7 +22,14 @@ def load_history(csv_path: str) -> pd.DataFrame:
         if col not in df.columns:
             df[col] = None
 
-    return df[expected_cols]
+    df = df[expected_cols].copy()
+    if not df.empty:
+        df["Date"] = pd.to_datetime(df["Date"]).dt.date.astype(str)
+        df["ExchangeRate"] = pd.to_numeric(df["ExchangeRate"], errors="coerce")
+        df = df.dropna(subset=["ExchangeRate"])
+        df = df.sort_values("Date").reset_index(drop=True)
+
+    return df
 
 
 def save_history(df: pd.DataFrame, csv_path: str) -> None:
@@ -54,7 +61,7 @@ def upsert_daily_row(
     ])
 
     df = pd.concat([df, new_row], ignore_index=True)
-    df["Date"] = df["Date"].astype(str)
+    df["Date"] = pd.to_datetime(df["Date"]).dt.date.astype(str)
     df["ExchangeRate"] = pd.to_numeric(df["ExchangeRate"], errors="coerce")
     df = df.dropna(subset=["ExchangeRate"])
     df = df.sort_values("Date").reset_index(drop=True)
@@ -69,7 +76,7 @@ def replace_full_history(
     load_timestamp_utc: str,
 ) -> pd.DataFrame:
     df = new_df.copy()
-    df["Date"] = df["Date"].astype(str)
+    df["Date"] = pd.to_datetime(df["Date"]).dt.date.astype(str)
     df["RateType"] = rate_type
     df["Source"] = source
     df["LoadTimestampUTC"] = load_timestamp_utc
@@ -77,3 +84,43 @@ def replace_full_history(
     df = df.dropna(subset=["ExchangeRate"])
     df = df.sort_values("Date").reset_index(drop=True)
     return df
+
+
+def forward_fill_calendar_history(
+    df: pd.DataFrame,
+    start_date: str,
+    end_date: str,
+    rate_type: str,
+    source: str,
+    load_timestamp_utc: str,
+) -> pd.DataFrame:
+    """
+    Builds a calendar-daily series from sparse market dates by forward-filling
+    the latest available value until a new one appears.
+    """
+    if df.empty:
+        raise ValueError("Cannot forward-fill an empty history dataframe.")
+
+    base = df.copy()
+    base["Date"] = pd.to_datetime(base["Date"])
+    base["ExchangeRate"] = pd.to_numeric(base["ExchangeRate"], errors="coerce")
+    base = base.dropna(subset=["ExchangeRate"])
+    base = base.sort_values("Date").drop_duplicates(subset=["Date"], keep="last")
+
+    full_calendar = pd.DataFrame({
+        "Date": pd.date_range(start=start_date, end=end_date, freq="D")
+    })
+
+    merged = pd.merge(full_calendar, base[["Date", "ExchangeRate"]], on="Date", how="left")
+    merged["ExchangeRate"] = merged["ExchangeRate"].ffill()
+
+    # If the very first requested date is before the first available source date,
+    # keep only dates from the first actual available observation onward.
+    merged = merged.dropna(subset=["ExchangeRate"]).copy()
+
+    merged["Date"] = merged["Date"].dt.date.astype(str)
+    merged["RateType"] = rate_type
+    merged["Source"] = source
+    merged["LoadTimestampUTC"] = load_timestamp_utc
+
+    return merged[["Date", "RateType", "ExchangeRate", "Source", "LoadTimestampUTC"]]
