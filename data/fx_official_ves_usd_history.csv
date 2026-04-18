@@ -836,3 +836,4 @@ Date,RateType,ExchangeRate,Source,LoadTimestampUTC
 2026-04-15,Official FX,478.5811,DolarAPI Oficial Histórico (calendar-filled),2026-04-17T12:49:02.779242+00:00
 2026-04-16,Official FX,479.7775,DolarAPI Oficial Histórico (calendar-filled),2026-04-17T12:49:02.779242+00:00
 2026-04-17,Official FX,480.2572,DolarAPI Oficial,2026-04-17T12:49:32.693866+00:00
+2026-04-18,Official FX,480.2572,DolarAPI Oficial (carried forward),2026-04-18T09:12:01.027342+00:00
