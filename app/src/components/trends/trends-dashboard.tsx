@@ -110,6 +110,10 @@ export function TrendsDashboard({ rows }: Props) {
     }
   }
 
+  function handleClearSearch() {
+    setSearch("")
+  }
+
   return (
     <div className="space-y-5">
       <div>
@@ -125,14 +129,14 @@ export function TrendsDashboard({ rows }: Props) {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div className="space-y-4">
+        <div className="flex min-w-0 flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+          <div className="min-w-0 space-y-4">
             <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
               <CalendarRange className="h-4 w-4" />
               <span>Rango de fechas</span>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex min-w-0 flex-wrap gap-2">
               {[
                 { value: "all" as const, label: "Todo" },
                 { value: "lastWeek" as const, label: "Última semana" },
@@ -153,11 +157,23 @@ export function TrendsDashboard({ rows }: Props) {
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-3 xl:max-w-4xl xl:flex-row xl:items-end xl:justify-end">
-            <div className="w-full xl:max-w-xs">
-              <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                Buscar fecha
-              </label>
+          <div className="flex min-w-0 w-full flex-col gap-3 xl:max-w-4xl xl:flex-row xl:items-end xl:justify-end">
+            <div className="w-full min-w-0 xl:max-w-xs">
+              <div className="flex items-center justify-between gap-2">
+                <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Buscar fecha
+                </label>
+                <Button
+                  type="button"
+                  size="xs"
+                  variant="ghost"
+                  className="h-7 px-2 text-xs text-slate-500"
+                  onClick={handleClearSearch}
+                  disabled={!search}
+                >
+                  Limpiar filtro
+                </Button>
+              </div>
               <Input
                 type="date"
                 aria-label="Buscar fecha"
@@ -169,11 +185,11 @@ export function TrendsDashboard({ rows }: Props) {
               />
             </div>
 
-            <div className="w-full xl:min-w-[320px]">
+            <div className="w-full min-w-0 xl:min-w-[320px]">
               <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
                 Buscar rango
               </label>
-              <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="mt-2 grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
                 <Input
                   type="date"
                   aria-label="Fecha inicial"
