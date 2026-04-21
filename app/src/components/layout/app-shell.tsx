@@ -14,10 +14,13 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { getLatestAvailableRow } from "@/lib/analytics/data-quality"
 import { fetchFxData } from "@/lib/data/fetch-fx-data"
+import { type FxAppRow } from "@/lib/data/types"
 import { AppSidebarNav } from "@/components/layout/app-sidebar-nav"
+import { APP_NAME } from "@/lib/constants"
 
 type Props = {
   children: ReactNode
+  rows?: FxAppRow[]
 }
 
 function formatRefreshDate(value: string | null) {
@@ -53,9 +56,9 @@ function formatRefreshDateTime(value: string | null) {
   })} UTC`
 }
 
-export async function AppShell({ children }: Props) {
-  const rows = await fetchFxData()
-  const latestOfficialRow = getLatestAvailableRow(rows, "OfficialRate", {
+export async function AppShell({ children, rows }: Props) {
+  const shellRows = rows ?? (await fetchFxData())
+  const latestOfficialRow = getLatestAvailableRow(shellRows, "OfficialRate", {
     publishedOnly: true,
   })
 
@@ -74,7 +77,7 @@ export async function AppShell({ children }: Props) {
             <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
               <Image
                 src="/files/Image20240528143038.png"
-                alt="Logo Tracking Tipo de Cambio"
+                alt={`Logo ${APP_NAME}`}
                 width={44}
                 height={44}
                 className="h-full w-full object-contain"
@@ -83,7 +86,7 @@ export async function AppShell({ children }: Props) {
             </div>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-slate-900">
-                Tracking Tipo de Cambio
+                {APP_NAME}
               </p>
               <p className="truncate text-xs text-slate-500">
                 Venezuela
@@ -133,7 +136,6 @@ export async function AppShell({ children }: Props) {
       <SidebarInset>
         <div className="min-h-screen bg-slate-50 text-slate-900">
           <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
-            {/* Header premium */}
             <div className="mb-5 rounded-3xl border border-slate-200 bg-white px-3 py-3 shadow-sm sm:px-5 sm:py-4">
               <div className="flex flex-row items-center justify-between gap-3">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -151,7 +153,7 @@ export async function AppShell({ children }: Props) {
                       Venezuela
                     </p>
                     <h1 className="truncate text-lg font-semibold tracking-tight text-slate-950 sm:text-2xl">
-                      Tracking Tipo de Cambio
+                      {APP_NAME}
                     </h1>
                   </div>
                 </div>

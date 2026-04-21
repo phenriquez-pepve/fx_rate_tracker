@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { useMounted } from "@/hooks/use-mounted"
 import {
   Line,
   LineChart,
@@ -52,6 +53,7 @@ function formatTooltipDate(value: string) {
 }
 
 export function FxRateChart({ data, showMarkers = false }: Props) {
+  const mounted = useMounted()
   const [showOfficial, setShowOfficial] = useState(true)
   const [showParallel, setShowParallel] = useState(true)
 
@@ -162,54 +164,56 @@ export function FxRateChart({ data, showMarkers = false }: Props) {
       </div>
 
       <div className="relative h-[360px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={visibleData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
-            <XAxis
-              dataKey="Date"
-              minTickGap={28}
-              tickFormatter={formatAxisDate}
-              tickLine={false}
-              axisLine={false}
-            />
-            <YAxis
-              width={82}
-              domain={yDomain}
-              tickFormatter={(value) => formatCurrency(Number(value))}
-              tickLine={false}
-              axisLine={false}
-            />
-            <Tooltip content={TooltipRates} />
-            {showOfficial ? (
-              <Line
-                type="monotone"
-                dataKey="OfficialRate"
-                name="Tasa oficial"
-                stroke="#000000"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                dot={showMarkers ? { r: 2.5, fill: "#000000", strokeWidth: 0 } : false}
-                activeDot={showMarkers ? { r: 4 } : false}
-                connectNulls={false}
+        {mounted ? (
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+            <LineChart data={visibleData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+              <XAxis
+                dataKey="Date"
+                minTickGap={28}
+                tickFormatter={formatAxisDate}
+                tickLine={false}
+                axisLine={false}
               />
-            ) : null}
-            {showParallel ? (
-              <Line
-                type="monotone"
-                dataKey="ParallelRate"
-                name="Tasa paralela"
-                stroke="#2563eb"
-                strokeWidth={2}
-                strokeDasharray="3 5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                dot={showMarkers ? { r: 2.5, fill: "#2563eb", strokeWidth: 0 } : false}
-                activeDot={showMarkers ? { r: 4 } : false}
-                connectNulls={false}
+              <YAxis
+                width={82}
+                domain={yDomain}
+                tickFormatter={(value) => formatCurrency(Number(value))}
+                tickLine={false}
+                axisLine={false}
               />
-            ) : null}
-          </LineChart>
-        </ResponsiveContainer>
+              <Tooltip content={TooltipRates} />
+              {showOfficial ? (
+                <Line
+                  type="monotone"
+                  dataKey="OfficialRate"
+                  name="Tasa oficial"
+                  stroke="#000000"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  dot={showMarkers ? { r: 2.5, fill: "#000000", strokeWidth: 0 } : false}
+                  activeDot={showMarkers ? { r: 4 } : false}
+                  connectNulls={false}
+                />
+              ) : null}
+              {showParallel ? (
+                <Line
+                  type="monotone"
+                  dataKey="ParallelRate"
+                  name="Tasa paralela"
+                  stroke="#2563eb"
+                  strokeWidth={2}
+                  strokeDasharray="3 5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  dot={showMarkers ? { r: 2.5, fill: "#2563eb", strokeWidth: 0 } : false}
+                  activeDot={showMarkers ? { r: 4 } : false}
+                  connectNulls={false}
+                />
+              ) : null}
+            </LineChart>
+          </ResponsiveContainer>
+        ) : null}
 
         {!showOfficial && !showParallel ? (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-2xl bg-white/70 text-sm text-slate-500 backdrop-blur-sm">

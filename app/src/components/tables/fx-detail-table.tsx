@@ -4,55 +4,13 @@ import { useMemo, useState } from "react"
 import { CalendarRange, Download } from "lucide-react"
 
 import { formatCurrency, formatPercent } from "@/lib/analytics/formatters"
+import { getPresetRange, type PresetRange } from "@/lib/date-ranges"
 import { FxAppRow } from "@/lib/data/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 type Props = {
   rows: FxAppRow[]
-}
-
-type PresetRange = "all" | "lastWeek" | "lastMonth" | "currentYear" | "custom"
-
-function toIsoDate(date: Date) {
-  return date.toISOString().slice(0, 10)
-}
-
-function parseUtcDate(value: string) {
-  return new Date(`${value}T00:00:00Z`)
-}
-
-function shiftUtcDate(value: string, amount: number, unit: "days" | "months") {
-  const date = parseUtcDate(value)
-
-  if (unit === "days") {
-    date.setUTCDate(date.getUTCDate() + amount)
-  } else {
-    date.setUTCMonth(date.getUTCMonth() + amount)
-  }
-
-  return toIsoDate(date)
-}
-
-function getPresetRange(preset: Exclude<PresetRange, "custom">, latestDate: string | null) {
-  if (!latestDate || preset === "all") {
-    return { startDate: "", endDate: latestDate ?? "" }
-  }
-
-  if (preset === "lastWeek") {
-    return { startDate: shiftUtcDate(latestDate, -6, "days"), endDate: latestDate }
-  }
-
-  if (preset === "lastMonth") {
-    return { startDate: shiftUtcDate(latestDate, -1, "months"), endDate: latestDate }
-  }
-
-  const latest = parseUtcDate(latestDate)
-
-  return {
-    startDate: `${latest.getUTCFullYear()}-01-01`,
-    endDate: latestDate,
-  }
 }
 
 function getDeltaColorClass(value: number | null | undefined) {
@@ -95,7 +53,7 @@ export function FxDetailTable({ rows }: Props) {
   const filteredRows = useMemo(() => {
     const term = search.trim()
 
-    return [...rows]
+    return [...sortedRows]
       .reverse()
       .filter((row) => {
         const matchesSearch = !term || row.Date.includes(term)
@@ -104,7 +62,7 @@ export function FxDetailTable({ rows }: Props) {
 
         return matchesSearch && matchesStart && matchesEnd
       })
-  }, [activeRange.endDate, activeRange.startDate, rows, search])
+  }, [activeRange.endDate, activeRange.startDate, search, sortedRows])
 
   function handlePresetChange(nextPreset: PresetRange) {
     setPreset(nextPreset)

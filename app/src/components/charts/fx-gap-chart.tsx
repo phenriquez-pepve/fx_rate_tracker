@@ -2,6 +2,7 @@
 
 import { useMemo } from "react"
 
+import { useMounted } from "@/hooks/use-mounted"
 import {
   Area,
   AreaChart,
@@ -62,6 +63,7 @@ function getDeltaColorClass(value: number | null | undefined) {
 }
 
 export function FxGapChart({ data, showMarkers = false }: Props) {
+  const mounted = useMounted()
   const chartData = useMemo(
     () =>
       data.map((point) => ({
@@ -122,58 +124,60 @@ export function FxGapChart({ data, showMarkers = false }: Props) {
 
   return (
     <div className="h-[360px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="gap-positive-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#dc2626" stopOpacity={0.24} />
-              <stop offset="100%" stopColor="#dc2626" stopOpacity={0.06} />
-            </linearGradient>
-            <linearGradient id="gap-negative-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#16a34a" stopOpacity={0.06} />
-              <stop offset="100%" stopColor="#16a34a" stopOpacity={0.24} />
-            </linearGradient>
-          </defs>
-          <XAxis
-            dataKey="Date"
-            minTickGap={28}
-            tickFormatter={formatAxisDate}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            width={72}
-            domain={yDomain}
-            tickFormatter={(value) => `${Number(value).toFixed(0)}%`}
-            tickLine={false}
-            axisLine={false}
-          />
-          <ReferenceLine y={0} stroke="#cbd5e1" strokeDasharray="4 4" />
-          <Tooltip content={TooltipGap} />
-          <Area
-            type="monotone"
-            dataKey="PositiveGapPct"
-            stroke="#dc2626"
-            fill="url(#gap-positive-fill)"
-            strokeWidth={2}
-            baseValue={0}
-            connectNulls={false}
-            dot={showMarkers ? { r: 2.5, fill: "#dc2626", strokeWidth: 0 } : false}
-            activeDot={showMarkers ? { r: 4 } : false}
-          />
-          <Area
-            type="monotone"
-            dataKey="NegativeGapPct"
-            stroke="#16a34a"
-            fill="url(#gap-negative-fill)"
-            strokeWidth={2}
-            baseValue={0}
-            connectNulls={false}
-            dot={showMarkers ? { r: 2.5, fill: "#16a34a", strokeWidth: 0 } : false}
-            activeDot={showMarkers ? { r: 4 } : false}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+      {mounted ? (
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <AreaChart data={chartData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="gap-positive-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#dc2626" stopOpacity={0.24} />
+                <stop offset="100%" stopColor="#dc2626" stopOpacity={0.06} />
+              </linearGradient>
+              <linearGradient id="gap-negative-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#16a34a" stopOpacity={0.06} />
+                <stop offset="100%" stopColor="#16a34a" stopOpacity={0.24} />
+              </linearGradient>
+            </defs>
+            <XAxis
+              dataKey="Date"
+              minTickGap={28}
+              tickFormatter={formatAxisDate}
+              tickLine={false}
+              axisLine={false}
+            />
+            <YAxis
+              width={72}
+              domain={yDomain}
+              tickFormatter={(value) => `${Number(value).toFixed(0)}%`}
+              tickLine={false}
+              axisLine={false}
+            />
+            <ReferenceLine y={0} stroke="#cbd5e1" strokeDasharray="4 4" />
+            <Tooltip content={TooltipGap} />
+            <Area
+              type="monotone"
+              dataKey="PositiveGapPct"
+              stroke="#dc2626"
+              fill="url(#gap-positive-fill)"
+              strokeWidth={2}
+              baseValue={0}
+              connectNulls={false}
+              dot={showMarkers ? { r: 2.5, fill: "#dc2626", strokeWidth: 0 } : false}
+              activeDot={showMarkers ? { r: 4 } : false}
+            />
+            <Area
+              type="monotone"
+              dataKey="NegativeGapPct"
+              stroke="#16a34a"
+              fill="url(#gap-negative-fill)"
+              strokeWidth={2}
+              baseValue={0}
+              connectNulls={false}
+              dot={showMarkers ? { r: 2.5, fill: "#16a34a", strokeWidth: 0 } : false}
+              activeDot={showMarkers ? { r: 4 } : false}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      ) : null}
     </div>
   )
 }

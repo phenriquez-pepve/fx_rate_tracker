@@ -24,6 +24,7 @@ import {
 import { KpiCard } from "@/components/kpi-card"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useMounted } from "@/hooks/use-mounted"
 import {
   buildForecastModel,
   type ForecastModel,
@@ -447,6 +448,7 @@ function GapTooltip({
 }
 
 export function ForecastDashboard({ rows }: Props) {
+  const mounted = useMounted()
   const [scenarioView, setScenarioView] = useState<ScenarioView>("regular")
 
   const model = useMemo(() => buildForecastModel(rows, 30), [rows])
@@ -603,7 +605,7 @@ export function ForecastDashboard({ rows }: Props) {
         <KpiCard
           title="Base diaria oficial"
           value={formatPercent(model.regularOfficialBase, 3)}
-          subtitle="Promedio ponderado 7/14/30/52/90 días"
+          subtitle="Promedio ponderado 7/14/30/90 días"
           delta={formatSignedPercent(model.regularOfficialBase, 3)}
           deltaPositiveIsBad
           icon={<TrendingUp className="h-5 w-5" />}
@@ -611,7 +613,7 @@ export function ForecastDashboard({ rows }: Props) {
         <KpiCard
           title="Base diaria paralela"
           value={formatPercent(model.regularParallelBase, 3)}
-          subtitle="Promedio ponderado 7/14/30/52/90 días"
+          subtitle="Promedio ponderado 7/14/30/90 días"
           delta={formatSignedPercent(model.regularParallelBase, 3)}
           deltaPositiveIsBad
           icon={<ChartNoAxesCombined className="h-5 w-5" />}
@@ -813,8 +815,9 @@ export function ForecastDashboard({ rows }: Props) {
           </CardHeader>
           <CardContent className="pt-1">
             <div className="h-[360px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={combinedData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                  <LineChart data={combinedData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
                   <XAxis
                     dataKey="Date"
                     minTickGap={28}
@@ -901,8 +904,9 @@ export function ForecastDashboard({ rows }: Props) {
                       connectNulls={false}
                     />
                   ))}
-                </LineChart>
-              </ResponsiveContainer>
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : null}
             </div>
           </CardContent>
         </Card>
@@ -915,9 +919,10 @@ export function ForecastDashboard({ rows }: Props) {
           </CardHeader>
           <CardContent className="pt-1">
             <div className="h-[360px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                {scenarioView === "all" ? (
-                  <LineChart data={combinedData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                  {scenarioView === "all" ? (
+                    <LineChart data={combinedData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
                     <XAxis
                       dataKey="Date"
                       minTickGap={28}
@@ -970,9 +975,9 @@ export function ForecastDashboard({ rows }: Props) {
                         connectNulls={false}
                       />
                     ))}
-                  </LineChart>
-                ) : (
-                  <AreaChart data={selectedGapAreaData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+                    </LineChart>
+                  ) : (
+                    <AreaChart data={selectedGapAreaData} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
                     <defs>
                       <linearGradient id="forecast-gap-positive-fill" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#dc2626" stopOpacity={0.24} />
@@ -1037,9 +1042,10 @@ export function ForecastDashboard({ rows }: Props) {
                       dot={false}
                       activeDot={false}
                     />
-                  </AreaChart>
-                )}
-              </ResponsiveContainer>
+                    </AreaChart>
+                  )}
+                </ResponsiveContainer>
+              ) : null}
             </div>
           </CardContent>
         </Card>

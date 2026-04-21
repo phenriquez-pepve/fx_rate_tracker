@@ -6,7 +6,7 @@ export default async function SummaryPage() {
   const rows = await fetchFxData()
 
   return (
-    <AppShell>
+    <AppShell rows={rows}>
       <SummaryDashboard rows={rows} />
     </AppShell>
   )

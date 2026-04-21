@@ -6,7 +6,7 @@ export default async function DetailPage() {
   const rows = await fetchFxData()
 
   return (
-    <AppShell>
+    <AppShell rows={rows}>
       <div className="space-y-5">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-slate-400">

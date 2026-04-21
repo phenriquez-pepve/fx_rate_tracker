@@ -306,7 +306,7 @@ export function buildForecastModel(rows: FxAppRow[], horizonDays = 30): Forecast
       name: "regular",
       label: "Regular",
       description:
-        "Usa la devaluación diaria promedio ponderada entre ventanas de 7, 14, 30, 52 y 90 días.",
+        "Usa la devaluación diaria promedio ponderada entre ventanas de 7, 14, 30 y 90 días.",
       officialDailyDevaluation: clampDailyRate(regularOfficialBase),
       parallelDailyDevaluation: clampDailyRate(regularParallelBase),
       officialVolatility,

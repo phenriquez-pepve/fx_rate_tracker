@@ -6,7 +6,7 @@ export default async function ForecastPage() {
   const rows = await fetchFxData()
 
   return (
-    <AppShell>
+    <AppShell rows={rows}>
       <ForecastDashboard rows={rows} />
     </AppShell>
   )

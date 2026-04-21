@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from "@vercel/analytics/next";
+import { APP_NAME } from "@/lib/constants";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -17,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Seguimiento Tipo de Cambio Venezuela",
-  description: "Tracking Tipo de Cambio para Venezuela",
+  title: `${APP_NAME} Venezuela`,
+  description: "Seguimiento diario del tipo de cambio oficial y paralelo en Venezuela.",
   icons: {
     icon: [
       { url: "/favicon.ico", type: "image/x-icon" },
@@ -36,8 +32,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      lang="es"
+      className={cn("h-full antialiased font-sans", inter.variable, geistMono.variable)}
     >
       <body className="min-h-full flex flex-col">
         {children}

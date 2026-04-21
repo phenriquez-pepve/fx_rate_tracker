@@ -7,6 +7,13 @@ import { KpiCard } from "@/components/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BadgeDollarSign, Activity, CalendarRange, TrendingUp, GitCompareArrows } from "lucide-react"
 import {
+  firstAvailableInMonth,
+  firstAvailableInYear,
+  getLatestDate,
+  getLatestRow,
+} from "@/lib/analytics/kpis"
+import { useMounted } from "@/hooks/use-mounted"
+import {
   ResponsiveContainer,
   LineChart,
   Line,
@@ -73,44 +80,6 @@ function formatDate(value: string) {
     month: "short",
     day: "2-digit",
   })
-}
-
-function getLatestRow(rows: FxAppRow[]) {
-  if (!rows.length) return null
-  return [...rows].sort((a, b) => a.Date.localeCompare(b.Date)).at(-1) ?? null
-}
-
-function getLatestDate(rows: FxAppRow[]) {
-  return getLatestRow(rows)?.Date ?? null
-}
-
-function firstAvailableInMonth(
-  rows: FxAppRow[],
-  key: "OfficialRate" | "ParallelRate",
-  latestDate: string
-) {
-  const latest = new Date(latestDate)
-  const y = latest.getUTCFullYear()
-  const m = latest.getUTCMonth()
-
-  return rows.find((r) => {
-    const d = new Date(r.Date)
-    return d.getUTCFullYear() === y && d.getUTCMonth() === m && r[key] != null
-  }) ?? null
-}
-
-function firstAvailableInYear(
-  rows: FxAppRow[],
-  key: "OfficialRate" | "ParallelRate",
-  latestDate: string
-) {
-  const latest = new Date(latestDate)
-  const y = latest.getUTCFullYear()
-
-  return rows.find((r) => {
-    const d = new Date(r.Date)
-    return d.getUTCFullYear() === y && r[key] != null
-  }) ?? null
 }
 
 function latestAvailableOnOrBefore(
@@ -273,6 +242,7 @@ function TooltipResumen({
 }
 
 export function SummaryDashboard({ rows }: Props) {
+  const mounted = useMounted()
   const [mode, setMode] = useState<RateMode>("official")
 
   const sortedRows = useMemo(
@@ -451,38 +421,40 @@ export function SummaryDashboard({ rows }: Props) {
           </CardHeader>
           <CardContent className="pt-1">
             <div className="h-[390px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={monthlySeries} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
-                  <XAxis dataKey="MonthLabel" tickLine={false} axisLine={false} />
-                  <YAxis tickLine={false} axisLine={false} />
-                  <Tooltip content={TooltipResumen} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="OfficialRate"
-                    name="Tasa oficial"
-                    stroke="#000000"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    dot={{ r: 2.5, fill: "#000000", strokeWidth: 0 }}
-                    activeDot={{ r: 4 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="ParallelRate"
-                    name="Tasa paralela"
-                    stroke="#2563eb"
-                    strokeWidth={2}
-                    strokeDasharray="3 5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    dot={{ r: 2.5, fill: "#2563eb", strokeWidth: 0 }}
-                    activeDot={{ r: 4 }}
-                    connectNulls={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              {mounted ? (
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                  <LineChart data={monthlySeries} margin={{ top: 12, right: 12, left: 0, bottom: 0 }}>
+                    <XAxis dataKey="MonthLabel" tickLine={false} axisLine={false} />
+                    <YAxis tickLine={false} axisLine={false} />
+                    <Tooltip content={TooltipResumen} />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="OfficialRate"
+                      name="Tasa oficial"
+                      stroke="#000000"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      dot={{ r: 2.5, fill: "#000000", strokeWidth: 0 }}
+                      activeDot={{ r: 4 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="ParallelRate"
+                      name="Tasa paralela"
+                      stroke="#2563eb"
+                      strokeWidth={2}
+                      strokeDasharray="3 5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      dot={{ r: 2.5, fill: "#2563eb", strokeWidth: 0 }}
+                      activeDot={{ r: 4 }}
+                      connectNulls={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : null}
             </div>
           </CardContent>
         </Card>

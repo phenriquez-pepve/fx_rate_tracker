@@ -6,7 +6,7 @@ export default async function TrendsPage() {
   const rows = await fetchFxData()
 
   return (
-    <AppShell>
+    <AppShell rows={rows}>
       <TrendsDashboard rows={rows} />
     </AppShell>
   )
