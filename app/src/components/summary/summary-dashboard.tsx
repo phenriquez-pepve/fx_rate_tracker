@@ -372,18 +372,17 @@ export function SummaryDashboard({ rows }: Props) {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-slate-100 p-1">
-          <div className="relative flex">
+        <div className="w-full rounded-2xl bg-slate-100 p-1 sm:w-auto">
+          <div className="relative grid grid-cols-2">
             <motion.div
-              layout
+              animate={{ x: mode === "official" ? 0 : "calc(100% + 4px)" }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white shadow-sm ${
-                mode === "official" ? "left-1" : "left-[calc(50%+0px)]"
-              }`}
+              className="absolute top-1 bottom-1 left-1 rounded-xl bg-white shadow-sm"
+              style={{ width: "calc(50% - 4px)" }}
             />
             <button
               onClick={() => setMode("official")}
-              className={`relative z-10 rounded-xl px-4 py-2 text-sm font-medium transition ${
+              className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-4 py-2 text-center text-sm font-medium transition sm:min-w-28 ${
                 mode === "official" ? "text-slate-900" : "text-slate-500"
               }`}
             >
@@ -391,7 +390,7 @@ export function SummaryDashboard({ rows }: Props) {
             </button>
             <button
               onClick={() => setMode("parallel")}
-              className={`relative z-10 rounded-xl px-4 py-2 text-sm font-medium transition ${
+              className={`relative z-10 flex min-w-0 items-center justify-center rounded-xl px-4 py-2 text-center text-sm font-medium transition sm:min-w-28 ${
                 mode === "parallel" ? "text-slate-900" : "text-slate-500"
               }`}
             >

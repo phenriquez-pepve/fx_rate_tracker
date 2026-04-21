@@ -1,13 +1,5 @@
-import Link from "next/link"
+import Image from "next/image"
 import { type CSSProperties, type ReactNode } from "react"
-import {
-  LayoutDashboard,
-  LineChart,
-  Table2,
-  Info,
-  TrendingUp,
-  ShieldCheck,
-} from "lucide-react"
 import {
   SidebarProvider,
   Sidebar,
@@ -17,23 +9,12 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { getLatestAvailableRow } from "@/lib/analytics/data-quality"
 import { fetchFxData } from "@/lib/data/fetch-fx-data"
-
-const navItems = [
-  { href: "/", label: "Resumen", icon: LayoutDashboard },
-  { href: "/trends", label: "Tendencias", icon: LineChart },
-  { href: "/detail", label: "Detalle", icon: Table2 },
-  { href: "/forecast", label: "Forecast", icon: TrendingUp },
-  { href: "/methodology", label: "Metodología", icon: Info },
-  { href: "/data-quality", label: "Calidad de datos", icon: ShieldCheck },
-]
+import { AppSidebarNav } from "@/components/layout/app-sidebar-nav"
 
 type Props = {
   children: ReactNode
@@ -90,12 +71,19 @@ export async function AppShell({ children }: Props) {
       <Sidebar variant="inset" collapsible="offcanvas">
         <SidebarHeader className="px-4 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 text-sm font-bold text-white shadow-sm">
-              PH
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <Image
+                src="/files/Image20240528143038.png"
+                alt="Logo Tracking Tipo de Cambio"
+                width={44}
+                height={44}
+                className="h-10 w-10 object-contain"
+                priority
+              />
             </div>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-slate-900">
-                FX Rate Tracker
+                Tracking Tipo de Cambio
               </p>
               <p className="truncate text-xs text-slate-500">
                 Venezuela
@@ -130,28 +118,14 @@ export async function AppShell({ children }: Props) {
         <SidebarContent className="px-2 py-3">
           <SidebarGroup>
             <SidebarGroupContent>
-              <SidebarMenu>
-                {navItems.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <SidebarMenuItem key={item.href}>
-                      <SidebarMenuButton>
-                        <Link href={item.href} className="flex items-center gap-3">
-                          <Icon className="h-4 w-4" />
-                          <span>{item.label}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                })}
-              </SidebarMenu>
+              <AppSidebarNav />
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
 
         <SidebarFooter className="px-4 py-4">
           <div className="rounded-2xl bg-slate-50 p-3 text-xs text-slate-500">
-            Plataforma interna para monitoreo de tasa oficial y paralela.
+            Venezuela: monitoreo de tasa oficial y paralela.
           </div>
         </SidebarFooter>
       </Sidebar>
@@ -174,31 +148,23 @@ export async function AppShell({ children }: Props) {
 
                   <div>
                     <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
-                      Plataforma interna
+                      Venezuela
                     </p>
                     <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
-                      Monitor FX Venezuela
+                      Tracking Tipo de Cambio
                     </h1>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <p className="text-[11px] uppercase tracking-wide text-slate-400">
-                      Estado
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-slate-800">
-                      Operativo
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <p className="text-[11px] uppercase tracking-wide text-slate-400">
-                      Fuente
-                    </p>
-                    <p className="mt-1 text-sm font-medium text-slate-800">
-                      DolarAPI + Dataset GitHub
-                    </p>
-                  </div>
+                <div className="flex justify-start md:justify-end">
+                  <Image
+                    src="/files/Image20240528142957.png"
+                    alt="Logo Andean Revenue Management"
+                    width={220}
+                    height={106}
+                    className="h-14 w-auto object-contain sm:h-16"
+                    priority
+                  />
                 </div>
               </div>
             </div>

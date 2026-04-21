@@ -156,7 +156,10 @@ export function TrendsDashboard({ rows }: Props) {
           <div className="flex w-full flex-col gap-3 xl:max-w-4xl xl:flex-row xl:items-end xl:justify-end">
             <div className="w-full xl:max-w-xs">
               <Input
-                placeholder="Buscar por fecha (AAAA-MM-DD)"
+                type="date"
+                aria-label="Buscar fecha"
+                min={minDate || undefined}
+                max={maxDate || undefined}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
