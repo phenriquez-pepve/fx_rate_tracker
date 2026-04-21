@@ -127,4 +127,25 @@
   html {
     @apply font-sans;
   }
+
+  input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    display: block;
+    max-inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  input[type="date"]::-webkit-date-and-time-value,
+  input[type="date"]::-webkit-datetime-edit {
+    max-inline-size: 100%;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-align: start;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    margin-inline-start: 0.25rem;
+  }
 }
