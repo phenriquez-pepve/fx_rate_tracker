@@ -20,9 +20,12 @@ export const metadata: Metadata = {
   title: "Seguimiento Tipo de Cambio Venezuela",
   description: "Tracking Tipo de Cambio para Venezuela",
   icons: {
-    icon: "/files/Image20240528143038.png",
-    shortcut: "/files/Image20240528143038.png",
-    apple: "/files/Image20240528143038.png",
+    icon: [
+      { url: "/favicon.ico", type: "image/x-icon" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
   },
 };
 

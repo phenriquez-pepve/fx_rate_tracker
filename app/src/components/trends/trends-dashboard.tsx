@@ -61,7 +61,7 @@ function getPresetRange(preset: Exclude<PresetRange, "custom">, latestDate: stri
 
 export function TrendsDashboard({ rows }: Props) {
   const [search, setSearch] = useState("")
-  const [preset, setPreset] = useState<PresetRange>("all")
+  const [preset, setPreset] = useState<PresetRange>("lastMonth")
   const [customStartDate, setCustomStartDate] = useState("")
   const [customEndDate, setCustomEndDate] = useState("")
 
@@ -155,39 +155,48 @@ export function TrendsDashboard({ rows }: Props) {
 
           <div className="flex w-full flex-col gap-3 xl:max-w-4xl xl:flex-row xl:items-end xl:justify-end">
             <div className="w-full xl:max-w-xs">
+              <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                Buscar fecha
+              </label>
               <Input
                 type="date"
                 aria-label="Buscar fecha"
                 min={minDate || undefined}
                 max={maxDate || undefined}
+                className="mt-2"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:min-w-[320px]">
-              <Input
-                type="date"
-                aria-label="Fecha inicial"
-                min={minDate || undefined}
-                max={maxDate || undefined}
-                value={activeRange.startDate}
-                onChange={(e) => {
-                  setPreset("custom")
-                  setCustomStartDate(e.target.value)
-                }}
-              />
-              <Input
-                type="date"
-                aria-label="Fecha final"
-                min={minDate || undefined}
-                max={maxDate || undefined}
-                value={activeRange.endDate}
-                onChange={(e) => {
-                  setPreset("custom")
-                  setCustomEndDate(e.target.value)
-                }}
-              />
+            <div className="w-full xl:min-w-[320px]">
+              <label className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                Buscar rango
+              </label>
+              <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Input
+                  type="date"
+                  aria-label="Fecha inicial"
+                  min={minDate || undefined}
+                  max={maxDate || undefined}
+                  value={activeRange.startDate}
+                  onChange={(e) => {
+                    setPreset("custom")
+                    setCustomStartDate(e.target.value)
+                  }}
+                />
+                <Input
+                  type="date"
+                  aria-label="Fecha final"
+                  min={minDate || undefined}
+                  max={maxDate || undefined}
+                  value={activeRange.endDate}
+                  onChange={(e) => {
+                    setPreset("custom")
+                    setCustomEndDate(e.target.value)
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>

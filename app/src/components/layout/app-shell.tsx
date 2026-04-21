@@ -71,13 +71,13 @@ export async function AppShell({ children }: Props) {
       <Sidebar variant="inset" collapsible="offcanvas">
         <SidebarHeader className="px-4 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
               <Image
                 src="/files/Image20240528143038.png"
                 alt="Logo Tracking Tipo de Cambio"
                 width={44}
                 height={44}
-                className="h-10 w-10 object-contain"
+                className="h-full w-full object-contain"
                 priority
               />
             </div>
@@ -134,35 +134,35 @@ export async function AppShell({ children }: Props) {
         <div className="min-h-screen bg-slate-50 text-slate-900">
           <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
             {/* Header premium */}
-            <div className="mb-5 rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center gap-3">
+            <div className="mb-5 rounded-3xl border border-slate-200 bg-white px-3 py-3 shadow-sm sm:px-5 sm:py-4">
+              <div className="flex flex-row items-center justify-between gap-3">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
                   <button
                     type="button"
                     title="Ver menú"
                     aria-label="Ver menú"
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-slate-50"
                   >
                     <SidebarTrigger />
                   </button>
 
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs uppercase tracking-[0.18em] text-slate-400">
                       Venezuela
                     </p>
-                    <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+                    <h1 className="truncate text-lg font-semibold tracking-tight text-slate-950 sm:text-2xl">
                       Tracking Tipo de Cambio
                     </h1>
                   </div>
                 </div>
 
-                <div className="flex justify-start md:justify-end">
+                <div className="flex shrink-0 justify-end p-[5px]">
                   <Image
                     src="/files/Image20240528142957.png"
                     alt="Logo Andean Revenue Management"
                     width={220}
                     height={106}
-                    className="h-14 w-auto object-contain sm:h-16"
+                    className="h-9 w-auto object-contain sm:h-12"
                     priority
                   />
                 </div>
