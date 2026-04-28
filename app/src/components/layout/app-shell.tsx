@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { type CSSProperties, type ReactNode } from "react"
 import {
   SidebarProvider,
@@ -74,15 +73,8 @@ export async function AppShell({ children, rows }: Props) {
       <Sidebar variant="inset" collapsible="offcanvas">
         <SidebarHeader className="px-4 py-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
-              <Image
-                src="/files/Image20240528143038.png"
-                alt={`Logo ${APP_NAME}`}
-                width={44}
-                height={44}
-                className="h-full w-full object-contain"
-                priority
-              />
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white text-sm font-semibold text-slate-800 shadow-sm">
+              FX
             </div>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-slate-900">
@@ -96,10 +88,10 @@ export async function AppShell({ children, rows }: Props) {
 
           <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3">
             <p className="text-xs font-medium text-slate-700">
-              Desarrollo por Paul Henriquez
+              Version temporal
             </p>
             <p className="mt-1 text-xs text-slate-500">
-              RGM Venezuela
+              V3.0.1 para Vercel
             </p>
           </div>
 
@@ -158,15 +150,8 @@ export async function AppShell({ children, rows }: Props) {
                   </div>
                 </div>
 
-                <div className="flex shrink-0 justify-end p-[5px]">
-                  <Image
-                    src="/files/Image20240528142957.png"
-                    alt="Logo Andean Revenue Management"
-                    width={220}
-                    height={106}
-                    className="h-9 w-auto object-contain sm:h-12"
-                    priority
-                  />
+                <div className="hidden shrink-0 justify-end text-right text-xs font-medium text-slate-500 sm:block">
+                  Temporal V3.0.1
                 </div>
               </div>
             </div>
@@ -174,7 +159,7 @@ export async function AppShell({ children, rows }: Props) {
             <div className="space-y-6">{children}</div>
 
             <footer className="mt-8 border-t border-slate-200 pt-4 text-center text-xs text-slate-500">
-              Desarrollado por Paul Henriquez | RGM Venezuela
+              Version temporal V3.0.1
             </footer>
           </div>
         </div>
