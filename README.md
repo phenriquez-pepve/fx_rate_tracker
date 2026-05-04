@@ -201,6 +201,76 @@ Runtime de la aplicacion:
 - Componentes shadcn/base-ui como primitivas de UI.
 - Vercel Analytics.
 
+## Tecnologias, Versiones y Herramientas
+
+### Runtime y Lenguajes
+
+| Tecnologia | Version / Configuracion | Uso |
+| --- | --- | --- |
+| Python | `3.12` en GitHub Actions | Jobs de extraccion, normalizacion y generacion de CSV |
+| Node.js | Recomendado: version LTS compatible con Next.js 16 | Runtime y build de la aplicacion web |
+| TypeScript | `^5` | Desarrollo tipado del frontend |
+| JavaScript / TSX | React JSX con `jsx: react-jsx` | Componentes de UI y paginas |
+
+### Frontend
+
+| Tecnologia | Version | Uso |
+| --- | ---: | --- |
+| Next.js | `16.2.4` | Framework web con App Router |
+| React | `19.2.4` | Libreria principal de UI |
+| React DOM | `19.2.4` | Renderizado web de React |
+| Tailwind CSS | `^4` | Sistema de estilos utilitarios |
+| `@tailwindcss/postcss` | `^4` | Integracion PostCSS para Tailwind |
+| Recharts | `^3.8.1` | Graficos de tasas, brechas y tendencias |
+| Framer Motion | `^12.38.0` | Animaciones e interacciones |
+| Lucide React | `^1.8.0` | Iconografia |
+| shadcn | `^4.3.0` | Generacion y convenciones de componentes UI |
+| `@base-ui/react` | `^1.4.0` | Primitivas accesibles de interfaz |
+| `@tanstack/react-table` | `^8.21.3` | Tabla de detalle y manejo tabular |
+| `class-variance-authority` | `^0.7.1` | Variantes de componentes |
+| `clsx` | `^2.1.1` | Composicion condicional de clases CSS |
+| `tailwind-merge` | `^3.5.0` | Resolucion de clases Tailwind |
+| `tw-animate-css` | `^1.4.0` | Utilidades de animacion CSS |
+| `@vercel/analytics` | `^2.0.1` | Analitica de Vercel |
+
+### Pipeline de Datos
+
+| Tecnologia | Version | Uso |
+| --- | ---: | --- |
+| pandas | `2.2.3` | Lectura, transformacion, union y escritura de datasets CSV |
+| requests | `2.32.3` | Consumo HTTP de DolarAPI |
+| CSV | N/A | Persistencia versionada de historicos y dataset de aplicacion |
+
+### Calidad, Build y Configuracion
+
+| Herramienta | Version / Configuracion | Uso |
+| --- | --- | --- |
+| ESLint | `^9` | Linting del frontend |
+| `eslint-config-next` | `16.2.4` | Reglas Next.js Core Web Vitals y TypeScript |
+| TypeScript strict mode | `strict: true` | Validacion estatica estricta |
+| Next Turbopack | Configurado por Next.js | Build/dev server de la app |
+| PostCSS | Via `@tailwindcss/postcss` | Procesamiento CSS |
+| shadcn config | `base-luma`, `neutral`, iconos `lucide` | Convenciones visuales y aliases de UI |
+
+### Automatizacion y Despliegue
+
+| Herramienta | Version / Configuracion | Uso |
+| --- | --- | --- |
+| GitHub Actions | `ubuntu-latest` | Scheduler de jobs diarios y manuales |
+| `actions/checkout` | `v4` | Checkout del repositorio en workflows |
+| `actions/setup-python` | `v5`, Python `3.12` | Preparacion del runtime Python en workflows |
+| Git | N/A | Commit y push automatico de CSV generados |
+| Windows Task Scheduler | Alternativa de despliegue Windows | Scheduler local si no se usa GitHub Actions |
+| IIS + reverse proxy | Alternativa de publicacion Windows | Publicacion interna de la app Next.js |
+
+### Fuentes y Servicios Externos
+
+| Servicio | Uso |
+| --- | --- |
+| DolarAPI | Fuente de tasa oficial y paralela VES/USD |
+| GitHub raw content | Hosting actual del CSV consumido por la app |
+| Vercel Analytics | Analitica de uso de la aplicacion |
+
 ## Notas de Despliegue
 
 La aplicacion obtiene el CSV desde la rama `main` del repositorio:
@@ -445,6 +515,76 @@ App runtime:
 - Recharts for charts.
 - shadcn/base-ui components for UI primitives.
 - Vercel Analytics.
+
+## Technologies, Versions, and Tools
+
+### Runtime and Languages
+
+| Technology | Version / Configuration | Use |
+| --- | --- | --- |
+| Python | `3.12` in GitHub Actions | Data extraction, normalization, and CSV generation jobs |
+| Node.js | Recommended: LTS version compatible with Next.js 16 | Web app runtime and build |
+| TypeScript | `^5` | Typed frontend development |
+| JavaScript / TSX | React JSX with `jsx: react-jsx` | UI components and pages |
+
+### Frontend
+
+| Technology | Version | Use |
+| --- | ---: | --- |
+| Next.js | `16.2.4` | Web framework with App Router |
+| React | `19.2.4` | Main UI library |
+| React DOM | `19.2.4` | React web rendering |
+| Tailwind CSS | `^4` | Utility-first styling system |
+| `@tailwindcss/postcss` | `^4` | Tailwind PostCSS integration |
+| Recharts | `^3.8.1` | Rate, gap, and trend charts |
+| Framer Motion | `^12.38.0` | Animations and interactions |
+| Lucide React | `^1.8.0` | Icons |
+| shadcn | `^4.3.0` | UI component generation and conventions |
+| `@base-ui/react` | `^1.4.0` | Accessible UI primitives |
+| `@tanstack/react-table` | `^8.21.3` | Detail table and tabular behavior |
+| `class-variance-authority` | `^0.7.1` | Component variants |
+| `clsx` | `^2.1.1` | Conditional CSS class composition |
+| `tailwind-merge` | `^3.5.0` | Tailwind class conflict resolution |
+| `tw-animate-css` | `^1.4.0` | CSS animation utilities |
+| `@vercel/analytics` | `^2.0.1` | Vercel Analytics |
+
+### Data Pipeline
+
+| Technology | Version | Use |
+| --- | ---: | --- |
+| pandas | `2.2.3` | Reading, transforming, joining, and writing CSV datasets |
+| requests | `2.32.3` | HTTP calls to DolarAPI |
+| CSV | N/A | Versioned persistence for histories and app dataset |
+
+### Quality, Build, and Configuration
+
+| Tool | Version / Configuration | Use |
+| --- | --- | --- |
+| ESLint | `^9` | Frontend linting |
+| `eslint-config-next` | `16.2.4` | Next.js Core Web Vitals and TypeScript rules |
+| TypeScript strict mode | `strict: true` | Strict static validation |
+| Next Turbopack | Configured by Next.js | App build/dev server |
+| PostCSS | Via `@tailwindcss/postcss` | CSS processing |
+| shadcn config | `base-luma`, `neutral`, `lucide` icons | Visual conventions and UI aliases |
+
+### Automation and Deployment
+
+| Tool | Version / Configuration | Use |
+| --- | --- | --- |
+| GitHub Actions | `ubuntu-latest` | Scheduled and manual jobs |
+| `actions/checkout` | `v4` | Repository checkout in workflows |
+| `actions/setup-python` | `v5`, Python `3.12` | Python runtime setup in workflows |
+| Git | N/A | Automatic commit and push of generated CSV files |
+| Windows Task Scheduler | Windows deployment alternative | Local scheduler if GitHub Actions is not used |
+| IIS + reverse proxy | Windows publishing alternative | Internal publishing for the Next.js app |
+
+### External Sources and Services
+
+| Service | Use |
+| --- | --- |
+| DolarAPI | Official and parallel VES/USD exchange-rate source |
+| GitHub raw content | Current hosting for the CSV consumed by the app |
+| Vercel Analytics | App usage analytics |
 
 ## Deployment Notes
 
