@@ -1,3 +1,267 @@
+# Rastreador de Tipo de Cambio
+
+MVP interno para dar seguimiento a los tipos de cambio VES/USD oficial y paralelo de Venezuela. El repositorio contiene dos partes principales:
+
+- Jobs de datos en Python que recopilan, normalizan y publican datasets CSV.
+- Una aplicacion de dashboard en Next.js que lee el dataset publicado y muestra vistas de resumen, tendencias, detalle, pronostico, metodologia y calidad de datos.
+
+## Mapa del Repositorio
+
+```text
+.
+├── .github/workflows/              # Jobs programados y manuales de GitHub Actions
+├── data/                           # Datasets CSV versionados consumidos por la app
+├── src/                            # Scripts del pipeline de datos en Python
+├── requirements.txt                # Dependencias del pipeline de Python
+└── app/                            # Aplicacion dashboard en Next.js
+    ├── public/                     # Logos, iconos y activos estaticos
+    └── src/
+        ├── app/                    # Paginas con App Router
+        ├── components/             # UI, graficos, dashboards y layout
+        └── lib/                    # Carga de datos, analitica, formato y utilidades
+```
+
+## Flujo de Datos
+
+1. `src/official_rate.py` obtiene la tasa oficial actual desde DolarAPI.
+2. `src/parallel_rate.py` obtiene la tasa paralela actual desde DolarAPI.
+3. Ambos scripts insertan o actualizan una fila diaria calendario en su respectivo CSV historico.
+4. Si la API no ha publicado un nuevo valor para la fecha UTC actual, el script reutiliza la ultima tasa almacenada y marca la fuente como arrastrada del dia anterior.
+5. `src/build_app_dataset.py` combina los historicos oficial y paralelo en:
+   - `data/fx_rates_ves_usd_combined.csv`: dataset en formato largo.
+   - `data/fx_rates_ves_usd_app_dataset.csv`: dataset en formato ancho usado por la aplicacion.
+6. La aplicacion Next.js obtiene el dataset ancho desde el contenido raw de GitHub usando `APP_DATASET_URL` en `app/src/lib/constants.ts`.
+
+## Archivos de Datos
+
+### `data/fx_official_ves_usd_history.csv`
+
+Historico de la tasa oficial con estas columnas:
+
+- `Date`: fecha calendario en formato `YYYY-MM-DD`.
+- `RateType`: `Official FX`.
+- `ExchangeRate`: tasa VES/USD.
+- `Source`: etiqueta de la fuente, incluyendo estado de arrastre cuando aplique.
+- `LoadTimestampUTC`: timestamp UTC de ejecucion del job.
+
+### `data/fx_parallel_ves_usd_history.csv`
+
+Historico de la tasa paralela con el mismo esquema del archivo oficial.
+
+### `data/fx_rates_ves_usd_combined.csv`
+
+Dataset combinado en formato largo, creado al concatenar los historicos oficial y paralelo.
+
+### `data/fx_rates_ves_usd_app_dataset.csv`
+
+Dataset en formato ancho consumido por el dashboard:
+
+- `Date`
+- `OfficialRate`
+- `OfficialCarriedForward`
+- `ParallelRate`
+- `ParallelCarriedForward`
+- `GapAbs`: `ParallelRate - OfficialRate`
+- `GapPct`: `(ParallelRate - OfficialRate) / OfficialRate`
+- `DataFreshnessUTC`
+
+## Jobs Programados
+
+Todos los cron schedules de GitHub Actions se ejecutan en UTC.
+
+| Workflow | Horario | Proposito |
+| --- | ---: | --- |
+| `daily-official-rate.yml` | `08:30 UTC` | Actualiza el historico de tasa oficial |
+| `daily-parallel-rate.yml` | `08:45 UTC` | Actualiza el historico de tasa paralela |
+| `build-app-dataset.yml` | `09:00 UTC` | Construye los datasets combinado y de aplicacion |
+| `backfill-official-rate.yml` | Manual | Reconstruye el historico oficial desde la API historica |
+| `backfill-parallel-rate.yml` | Manual | Reconstruye el historico paralelo desde la API historica |
+
+El build diario del dataset debe ejecutarse despues de que ambos jobs diarios de tasas hayan terminado y hayan subido sus cambios de CSV. Si uno de los jobs anteriores falla, se debe revisar manualmente la pestana Actions antes de confiar en el ultimo dataset de la aplicacion.
+
+## Ejecucion en Windows Server
+
+Los GitHub Actions no se ejecutan dentro del Windows Server. Se ejecutan en la infraestructura de GitHub, actualizan los CSV del repositorio y hacen `git push` a la rama `main`.
+
+Si la aplicacion desplegada en Windows Server conserva el `APP_DATASET_URL` actual, seguira leyendo el CSV desde GitHub raw. En ese escenario, las actualizaciones diarias seguiran funcionando aunque la aplicacion este hospedada en Windows, siempre que:
+
+- El repositorio siga disponible para la aplicacion.
+- El servidor tenga salida HTTPS hacia `raw.githubusercontent.com`.
+- Los workflows de GitHub Actions sigan habilitados.
+
+Si el proyecto se entrega como ZIP y no se mantendra conectado a GitHub Actions, entonces las actualizaciones automaticas no ocurriran por si solas. En ese caso hay que reemplazar GitHub Actions con una alternativa operativa:
+
+- Opcion recomendada si se permite GitHub: mantener GitHub Actions como motor de actualizacion y desplegar la app en Windows solo como consumidor del dataset.
+- Opcion recomendada si todo debe vivir en Windows: crear tareas programadas de Windows Task Scheduler que ejecuten `python src/official_rate.py`, `python src/parallel_rate.py` y `python src/build_app_dataset.py` en el orden correcto. Luego la app debe leer el CSV local o se debe publicar el CSV generado en una ubicacion accesible por HTTP.
+- Opcion hibrida: ejecutar las tareas en Windows y hacer `git commit`/`git push` de los CSV para mantener el repositorio como fuente de datos.
+- Opcion empresarial: mover los jobs de Python a un scheduler interno, como Windows Task Scheduler, SQL Agent, Azure Automation, Jenkins, Control-M u otra herramienta aprobada por IT.
+
+Ver [WINDOWS_SERVER_IMPLEMENTATION_GUIDE.md](WINDOWS_SERVER_IMPLEMENTATION_GUIDE.md) para una guia paso a paso de despliegue.
+
+## Configuracion Local
+
+### Pipeline de Datos en Python
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Ejecutar jobs individuales:
+
+```bash
+python src/official_rate.py
+python src/parallel_rate.py
+python src/build_app_dataset.py
+```
+
+Ejecutar backfills historicos:
+
+```bash
+python src/backfill_official.py
+python src/backfill_parallel.py
+python src/build_app_dataset.py
+```
+
+### Aplicacion Next.js
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+Abrir la URL local mostrada por Next.js, normalmente `http://localhost:3000`.
+
+Validacion de produccion:
+
+```bash
+cd app
+npm run lint
+npm run build
+```
+
+## Paginas de la Aplicacion
+
+- `/`: resumen ejecutivo con tasa mas reciente, KPIs MTD, YTD, interanual y brecha.
+- `/trends`: graficos filtrables por fecha de tasas oficial/paralela y tendencia de brecha.
+- `/detail`: tabla filtrable por fecha con exportacion CSV.
+- `/forecast`: pronostico descriptivo a 30 dias con escenarios regular, optimista y pesimista.
+- `/methodology`: descripcion para usuarios sobre fuentes y reglas de calculo.
+- `/data-quality`: controles operativos de cobertura, duplicados, frescura y comportamiento de arrastre.
+
+## Metodologia del Pronostico
+
+El pronostico es descriptivo, no una recomendacion predictiva.
+
+Comportamiento principal:
+
+- Usa las ultimas tasas oficial y paralela disponibles como puntos de anclaje.
+- Calcula la devaluacion diaria observada solo desde observaciones publicadas, excluyendo filas arrastradas.
+- Normaliza retornos por dias transcurridos entre observaciones publicadas.
+- Usa ventanas ponderadas de 7, 14, 30 y 90 dias.
+- El escenario regular usa el promedio ponderado de devaluacion diaria.
+- Los escenarios optimista y pesimista ajustan la base regular por `0.75` desviaciones estandar ponderadas.
+- El horizonte del pronostico por defecto es de 30 dias en `ForecastDashboard`.
+- La brecha se deriva de las tasas oficial y paralela proyectadas; no se pronostica de forma independiente.
+
+Puntos de atencion:
+
+- La calidad del pronostico depende completamente de la calidad del historico de fuentes.
+- Un historico paralelo muy corto puede hacer que las ventanas de pronostico paralelo sean escasas.
+- Las filas arrastradas son utiles para continuidad de la app, pero se excluyen intencionalmente de los calculos de retorno del pronostico.
+- Las etiquetas de escenario deben leerse como casos de sensibilidad, no como intervalos de confianza.
+
+## Logica de Arrastre
+
+La logica de arrastre existe para mantener un dataset diario calendario incluso cuando una fuente no ha publicado un valor nuevo.
+
+Comportamiento importante:
+
+- Los jobs diarios actuales comparan la fecha de publicacion de la fuente con la fecha UTC actual.
+- Si las fechas difieren, se reutiliza el ultimo valor almacenado para la fila de hoy.
+- La columna `Source` incluye `(carried forward)`.
+- `build_app_dataset.py` convierte esa etiqueta en `OfficialCarriedForward` y `ParallelCarriedForward`.
+
+Implicacion operativa:
+
+- Una fila arrastrada significa que la app fue actualizada, pero la tasa subyacente no fue publicada nuevamente por la fuente para esa fecha.
+
+## Dependencias Externas
+
+Fuente de datos:
+
+- Endpoints actuales e historicos de DolarAPI para tasa oficial.
+- Endpoints actuales e historicos de DolarAPI para tasa paralela.
+
+Runtime de la aplicacion:
+
+- Next.js App Router.
+- Recharts para graficos.
+- Componentes shadcn/base-ui como primitivas de UI.
+- Vercel Analytics.
+
+## Notas de Despliegue
+
+La aplicacion obtiene el CSV desde la rama `main` del repositorio:
+
+```ts
+APP_DATASET_URL =
+  "https://raw.githubusercontent.com/phenriquez-pepve/fx_rate_tracker/refs/heads/main/data/fx_rates_ves_usd_app_dataset.csv"
+```
+
+Esto simplifica el despliegue, pero implica que:
+
+- La aplicacion desplegada depende de la disponibilidad de GitHub raw content.
+- La aplicacion puede mostrar datos con hasta una hora de desfase porque `fetchFxData` usa `revalidate: 3600`.
+- Si cambia el nombre del repositorio o de la rama, hay que actualizar `APP_DATASET_URL`.
+- Si la aplicacion se mueve a un repositorio privado, la lectura desde GitHub raw tendra que reemplazarse por otra forma de hospedaje de datos.
+
+## Notificacion con Power Automate
+
+La notificacion por correo no esta implementada intencionalmente en este repositorio. Para el MVP interno, la notificacion diaria deberia vivir en Microsoft Power Automate dentro del entorno Microsoft de la compania.
+
+Trigger sugerido:
+
+- Flujo cloud programado.
+- Ejecutar diariamente a las 9:00 AM hora de Caracas.
+- Enviar un correo interno limpio con el enlace de la aplicacion despues de la ventana esperada de actualizacion del dataset.
+
+## Notas de Organizacion del Codigo
+
+- `app/src/lib/data` contiene la carga y parseo del CSV.
+- `app/src/lib/analytics` contiene calculos reutilizables.
+- `app/src/lib/date-ranges.ts` contiene el comportamiento compartido de presets de fecha para las vistas de tendencias y detalle.
+- Los componentes de dashboard deben mantenerse enfocados en estado de UI y presentacion.
+- Los scripts de Python deben permanecer pequenos, con una sola responsabilidad, y aptos para GitHub Actions.
+
+## Checklist de Mantenimiento
+
+Antes de una publicacion interna:
+
+```bash
+python -m compileall src
+cd app
+npm run lint
+npm run build
+```
+
+Tambien revisar:
+
+- GitHub Actions completo exitosamente los jobs oficial, paralelo y dataset de aplicacion.
+- `data/fx_rates_ves_usd_app_dataset.csv` tiene un `DataFreshnessUTC` reciente.
+- `/data-quality` muestra cero fechas duplicadas.
+- Los conteos de arrastre se pueden explicar por fines de semana, feriados o retrasos de publicacion de la fuente.
+- El texto de pronostico sigue alineado con las ventanas activas en `app/src/lib/analytics/forecast.ts`.
+
+## Tradeoffs Conocidos del MVP
+
+- El parseo de CSV en la aplicacion es intencionalmente simple porque el dataset generado no contiene campos con comas complejas entre comillas.
+
+---
+
+## English Version
+
 # FX Rate Tracker
 
 Internal MVP for tracking the Venezuela VES/USD official and parallel exchange rates. The repository contains two main parts:
