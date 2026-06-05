@@ -993,3 +993,5 @@ Date,RateType,ExchangeRate,Source,LoadTimestampUTC,OfficialCarriedForward,Parall
 2026-06-03,Parallel FX,732.525,DolarAPI Paralelo,2026-06-03T13:01:51.160939+00:00,,False
 2026-06-04,Official FX,560.3753,DolarAPI Oficial,2026-06-04T11:30:22.627148+00:00,False,
 2026-06-04,Parallel FX,740.118625,DolarAPI Paralelo,2026-06-04T11:40:10.892485+00:00,,False
+2026-06-05,Official FX,563.2892,DolarAPI Oficial,2026-06-05T11:41:35.143488+00:00,False,
+2026-06-05,Parallel FX,743.473625,DolarAPI Paralelo,2026-06-05T11:49:54.237196+00:00,,False
