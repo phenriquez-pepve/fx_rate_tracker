@@ -1065,3 +1065,5 @@ Date,RateType,ExchangeRate,Source,LoadTimestampUTC,OfficialCarriedForward,Parall
 2026-07-09,Parallel FX,822.707375,DolarAPI Paralelo,2026-07-09T11:35:42.402654+00:00,,False
 2026-07-10,Official FX,709.6935,DolarAPI Oficial,2026-07-10T11:24:50.501770+00:00,False,
 2026-07-10,Parallel FX,825.02625,DolarAPI Paralelo,2026-07-10T11:33:55.706295+00:00,,False
+2026-07-11,Official FX,709.6935,DolarAPI Oficial (carried forward),2026-07-11T09:57:26.371001+00:00,True,
+2026-07-11,Parallel FX,826.26375,DolarAPI Paralelo,2026-07-11T10:05:31.812855+00:00,,False
